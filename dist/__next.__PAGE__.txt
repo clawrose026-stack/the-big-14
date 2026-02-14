@@ -1,0 +1,10 @@
+1:"$Sreact.fragment"
+2:I[73707,["/_next/static/chunks/c2168fbf6ebd2d14.js"],"default"]
+3:I[70310,["/_next/static/chunks/c2168fbf6ebd2d14.js"],"default"]
+4:I[62326,["/_next/static/chunks/c2168fbf6ebd2d14.js"],"default"]
+5:I[20449,["/_next/static/chunks/c2168fbf6ebd2d14.js"],"default"]
+6:I[10908,["/_next/static/chunks/c2168fbf6ebd2d14.js"],"default"]
+7:I[97367,["/_next/static/chunks/2f236954d6a65e12.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+0:{"buildId":"jr0LNWj8wMGKFwxG_J3yv","rsc":["$","$1","c",{"children":[["$","main",null,{"children":[["$","$L2",null,{}],["$","$L3",null,{}],["$","$L4",null,{}],["$","$L5",null,{}],["$","$L6",null,{}],["$","footer",null,{"className":"bg-stone-950 text-white py-12 border-t border-white/10","children":["$","div",null,{"className":"section-padding max-w-7xl mx-auto","children":["$","div",null,{"className":"flex flex-col md:flex-row justify-between items-center gap-6","children":[["$","div",null,{"className":"text-center md:text-left","children":[["$","h3",null,{"className":"font-display text-2xl","children":"The Big 14"}],["$","p",null,{"className":"text-stone-500 text-sm mt-1","children":["Premium Guesthouse in ","Randburg"]}]]}],["$","div",null,{"className":"flex gap-8 text-sm text-stone-500","children":[["$","a",null,{"href":"#about","className":"hover:text-white transition-colors","children":"About"}],["$","a",null,{"href":"#book","className":"hover:text-white transition-colors","children":"Book"}],["$","a",null,{"href":"#","className":"hover:text-white transition-colors","children":"Terms"}],["$","a",null,{"href":"#","className":"hover:text-white transition-colors","children":"Privacy"}]]}],["$","div",null,{"className":"text-stone-500 text-sm","children":["© ",2026," ","The Big 14",". All rights reserved."]}]]}]}]}]]}],[["$","script","script-0",{"src":"/_next/static/chunks/c2168fbf6ebd2d14.js","async":true}]],["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]]}],"loading":null,"isPartial":false}
+9:null
