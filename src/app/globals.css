@@ -1,21 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --font-outfit: 'Outfit', sans-serif;
-  --font-nunito: 'Nunito', sans-serif;
-  
-  /* Warm, inviting colors */
-  --cream: #FFF8F0;
-  --coral: #FF6B6B;
-  --coral-light: #FFE5E5;
-  --sage: #88B04B;
-  --sage-light: #E8F5E9;
-  --sand: #F5E6D3;
-  --charcoal: #2D3436;
-  --warm-gray: #636E72;
-  --sunshine: #FFD93D;
-  --lavender: #A29BFE;
-  --sky: #74B9FF;
+  --font-inter: 'Inter', sans-serif;
+  --font-playfair: 'Playfair Display', serif;
 }
 
 @layer base {
@@ -24,53 +11,41 @@
   }
   
   body {
-    background-color: var(--cream);
-    color: var(--charcoal);
+    background-color: white;
+    color: #1c1917;
   }
 }
 
 @layer components {
   .btn-primary {
-    background-color: var(--coral);
+    background-color: #1c1917;
     color: white;
     padding: 1rem 2rem;
-    font-weight: 600;
-    border-radius: 9999px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    transition: all 0.3s;
   }
   
   .btn-primary:hover {
-    background-color: #FF5252;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    background-color: #292524;
   }
   
   .btn-primary:active {
-    transform: translateY(0);
+    transform: scale(0.98);
   }
   
-  .btn-secondary {
-    background-color: white;
-    color: var(--charcoal);
+  .btn-outline {
+    border: 2px solid #1c1917;
+    color: #1c1917;
     padding: 1rem 2rem;
-    font-weight: 600;
-    border-radius: 9999px;
-    border: 2px solid var(--charcoal);
-    transition: all 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    transition: all 0.3s;
   }
   
-  .btn-secondary:hover {
-    background-color: var(--charcoal);
+  .btn-outline:hover {
+    background-color: #1c1917;
     color: white;
-    transform: translateY(-2px);
-  }
-  
-  .card {
-    background-color: white;
-    border-radius: 24px;
-    padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   }
   
   .section-padding {
@@ -99,76 +74,17 @@
     }
   }
   
-  .gradient-text {
-    background: linear-gradient(135deg, var(--coral), var(--sunshine));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .blob {
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  .text-balance {
+    text-wrap: balance;
   }
 }
 
 @layer utilities {
   .font-display {
-    font-family: var(--font-outfit);
+    font-family: var(--font-playfair);
   }
   
   .font-body {
-    font-family: var(--font-nunito);
-  }
-  
-  .bg-cream {
-    background-color: var(--cream);
-  }
-  
-  .bg-coral {
-    background-color: var(--coral);
-  }
-  
-  .bg-coral-light {
-    background-color: var(--coral-light);
-  }
-  
-  .bg-sage {
-    background-color: var(--sage);
-  }
-  
-  .bg-sage-light {
-    background-color: var(--sage-light);
-  }
-  
-  .bg-sand {
-    background-color: var(--sand);
-  }
-  
-  .bg-sunshine {
-    background-color: var(--sunshine);
-  }
-  
-  .bg-lavender {
-    background-color: var(--lavender);
-  }
-  
-  .bg-sky {
-    background-color: var(--sky);
-  }
-  
-  .text-charcoal {
-    color: var(--charcoal);
-  }
-  
-  .text-coral {
-    color: var(--coral);
-  }
-  
-  .text-sage {
-    color: var(--sage);
-  }
-  
-  .text-warm-gray {
-    color: var(--warm-gray);
+    font-family: var(--font-inter);
   }
 }
