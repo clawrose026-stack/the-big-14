@@ -2,127 +2,115 @@
 
 import { useState } from 'react';
 import { propertyDetails } from '@/lib/property';
-import { ChevronLeft, ChevronRight, Bed, Bath, Users, Home } from 'lucide-react';
+import { Bed, Bath, Users, Home, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Gallery() {
   const [activeImage, setActiveImage] = useState(0);
 
-  // Placeholder images - replace with actual property photos
   const images = [
-    { label: "Exterior View", description: "Main entrance and facade" },
-    { label: "Living Area", description: "Spacious living space" },
-    { label: "Bedroom", description: "Master bedroom with premium linens" },
-    { label: "Bathroom", description: "Modern bathroom" },
-    { label: "Kitchen", description: "Fully equipped kitchen" },
-    { label: "Outdoor Space", description: "Private outdoor area" },
+    { label: "Cozy Bedroom", emoji: "🛏️" },
+    { label: "Modern Bathroom", emoji: "🚿" },
+    { label: "Living Area", emoji: "🛋️" },
+    { label: "Kitchen", emoji: "🍳" },
+    { label: "Outdoor Space", emoji: "🌿" },
+    { label: "Welcome Area", emoji: "🏠" },
   ];
 
   const nextImage = () => setActiveImage((prev) => (prev + 1) % images.length);
   const prevImage = () => setActiveImage((prev) => (prev - 1 + images.length) % images.length);
 
   return (
-    <section id="about" className="py-24 bg-stone-50">
-      <div className="section-padding max-w-7xl mx-auto">
+    <section id="about" className="py-20 bg-cream">
+      <div className="section-padding max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-16">
-          <div>
-            <span className="text-stone-500 text-sm tracking-widest uppercase mb-4 block">
-              The Space
-            </span>
-            <h2 className="font-display text-4xl lg:text-5xl text-stone-900">
-              Where Comfort Meets Style
-            </h2>
+        <div className="text-center mb-12">
+          <span className="inline-block bg-sage-light text-sage px-4 py-2 rounded-full text-sm font-semibold mb-4">
+            Take a Look Around 👀
+          </span>
+          <h2 className="font-display text-4xl lg:text-5xl font-bold text-charcoal mb-4">
+            Your Home Away From Home
+          </h2>
+        </div>
+
+        {/* Property Specs - Fun cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          <div className="bg-white p-6 rounded-3xl text-center shadow-sm">
+            <div className="w-14 h-14 bg-coral-light rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <Bed className="w-6 h-6 text-coral" />
+            </div>
+            <p className="text-3xl font-bold text-charcoal">{propertyDetails.specs.bedrooms}</p>
+            <p className="text-warm-gray">Bedroom</p>
           </div>
-          
-          {/* Property Specs */}
-          <div className="flex flex-wrap gap-8">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-stone-900 flex items-center justify-center">
-                <Bed className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-display text-stone-900">{propertyDetails.specs.bedrooms}</p>
-                <p className="text-sm text-stone-500">Bedroom</p>
-              </div>
+          <div className="bg-white p-6 rounded-3xl text-center shadow-sm">
+            <div className="w-14 h-14 bg-sky/20 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <Bath className="w-6 h-6 text-sky" />
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-stone-900 flex items-center justify-center">
-                <Bath className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-display text-stone-900">{propertyDetails.specs.bathrooms}</p>
-                <p className="text-sm text-stone-500">Bathroom</p>
-              </div>
+            <p className="text-3xl font-bold text-charcoal">{propertyDetails.specs.bathrooms}</p>
+            <p className="text-warm-gray">Bathroom</p>
+          </div>
+          <div className="bg-white p-6 rounded-3xl text-center shadow-sm">
+            <div className="w-14 h-14 bg-sunshine/30 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <Users className="w-6 h-6 text-amber-600" />
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-stone-900 flex items-center justify-center">
-                <Users className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-display text-stone-900">{propertyDetails.specs.maxGuests}</p>
-                <p className="text-sm text-stone-500">Guests</p>
-              </div>
+            <p className="text-3xl font-bold text-charcoal">{propertyDetails.specs.maxGuests}</p>
+            <p className="text-warm-gray">Guests</p>
+          </div>
+          <div className="bg-white p-6 rounded-3xl text-center shadow-sm">
+            <div className="w-14 h-14 bg-lavender/30 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <Home className="w-6 h-6 text-purple-600" />
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-stone-900 flex items-center justify-center">
-                <Home className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-display text-stone-900">{propertyDetails.specs.propertyType}</p>
-                <p className="text-sm text-stone-500">Type</p>
-              </div>
-            </div>
+            <p className="text-3xl font-bold text-charcoal">{propertyDetails.specs.propertyType}</p>
+            <p className="text-warm-gray">Type</p>
           </div>
         </div>
 
-        {/* Main Gallery */}
-        <div className="grid lg:grid-cols-3 gap-4">
-          {/* Large Featured Image */}
-          <div className="lg:col-span-2 lg:row-span-2 relative aspect-[4/3] lg:aspect-auto bg-stone-200 group overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-stone-500">{images[activeImage].label}</span>
+        {/* Gallery Grid - Fun, rounded */}
+        <div className="grid md:grid-cols-3 gap-4">
+          {/* Main large image */}
+          <div className="md:col-span-2 md:row-span-2 relative group">
+            <div className="aspect-square md:aspect-auto md:h-full bg-sand rounded-3xl flex items-center justify-center relative overflow-hidden">
+              <span className="text-6xl">{images[activeImage].emoji}</span>
+              <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full">
+                <p className="font-semibold text-charcoal">{images[activeImage].label}</p>
+              </div>
             </div>
             
             {/* Navigation */}
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
-
-            {/* Image Counter */}
-            <div className="absolute bottom-4 right-4 bg-white/90 px-4 py-2">
-              <span className="text-sm font-medium">
-                {activeImage + 1} / {images.length}
-              </span>
-            </div>
           </div>
 
-          {/* Thumbnail Grid */}
+          {/* Thumbnails */}
           {images.slice(1, 4).map((image, index) => (
             <div
               key={index}
               onClick={() => setActiveImage(index + 1)}
-              className="relative aspect-square bg-stone-200 cursor-pointer hover:opacity-80 transition-opacity"
+              className="aspect-square bg-sand rounded-3xl flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
             >
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-stone-500 text-sm">{image.label}</span>
-              </div>
+              <span className="text-4xl">{image.emoji}</span>
             </div>
           ))}
         </div>
 
-        {/* Description */}
-        <div className="mt-16 max-w-3xl">
-          <p className="text-lg text-stone-600 leading-relaxed whitespace-pre-line">
-            {propertyDetails.description}
+        {/* Description - Friendly tone */}
+        <div className="mt-12 bg-white p-8 rounded-3xl">
+          <p className="text-lg text-warm-gray leading-relaxed">
+            Hey there! 👋 Welcome to The Big 14 — your cozy retreat in Randburg! 
+            Whether you&apos;re here for work or play, we&apos;ve got you covered. 
+            Think of it as your own little sanctuary with all the comforts of home, 
+            plus a few extra perks to make your stay special. 
+            Fast WiFi for those work calls, comfy bed for lazy mornings, 
+            and coffee to fuel your adventures! ☕✨
           </p>
         </div>
       </div>

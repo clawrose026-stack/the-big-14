@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Outfit, Nunito } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-outfit",
 });
 
-const playfair = Playfair_Display({
+const nunito = Nunito({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  variable: "--font-nunito",
 });
 
 export const metadata: Metadata = {
-  title: "The Big 14 | Premium Guesthouse Randburg",
-  description: "Experience boutique comfort at The Big 14. A premium guesthouse in Randburg, Johannesburg with 5-star amenities and exceptional service.",
-  keywords: "guesthouse, randburg, johannesburg, accommodation, boutique hotel, airbnb alternative",
+  title: "The Big 14 | Cozy Guesthouse in Randburg",
+  description: "Your home away from home in Johannesburg! The Big 14 is a cozy, welcoming guesthouse with everything you need for a perfect stay.",
 };
 
 export default function RootLayout({
@@ -24,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="font-sans antialiased bg-white text-stone-900">
+    <html lang="en" className={`${outfit.variable} ${nunito.variable}`}>
+      <body className="font-body antialiased bg-cream text-charcoal">
         {children}
       </body>
     </html>
