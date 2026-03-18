@@ -95,14 +95,27 @@ export default function BookingCalendar() {
     setError('');
 
     try {
+      // Split guest name into first and last
+      const nameParts = guestName.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
       const booking: Omit<Booking, 'id' | 'created_at'> = {
+        booking_ref: `TBF-${Date.now().toString().slice(-8)}`,
         check_in: checkIn.toISOString().split('T')[0],
         check_out: checkOut.toISOString().split('T')[0],
-        guest_name: guestName,
+        guest_first_name: firstName,
+        guest_last_name: lastName,
         guest_email: guestEmail,
         guest_phone: guestPhone,
+        id_type: 'sa_id',
+        id_number: '',
         num_guests: numGuests,
-        total_price: calculateTotal(),
+        base_rate: propertyDetails.pricing.baseRate * 100,
+        cleaning_fee: propertyDetails.pricing.cleaningFee * 100,
+        total_price: calculateTotal() * 100,
+        payment_status: 'pending',
+        payment_method: 'manual',
         status: 'pending',
       };
 

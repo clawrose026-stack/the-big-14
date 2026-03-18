@@ -1,0 +1,202 @@
+// Resend Email API Route
+// Sends booking confirmation emails
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { to, bookingRef, guestName, checkIn, checkOut, numGuests, total, propertyName } = body;
+
+    // Validate required fields
+    if (!to || !bookingRef || !guestName) {
+      return Response.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Resend API key from environment
+    const resendKey = process.env.RESEND_API_KEY;
+
+    if (!resendKey) {
+      return Response.json(
+        { error: 'Resend API key not configured' },
+        { status: 500 }
+      );
+    }
+
+    // Format dates
+    const formatDate = (dateStr: string) => {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-ZA', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    };
+
+    // Send email to guest
+    const fromEmail = 'The Big 14 <clawrose026@gmail.com>';
+    
+    console.log('Sending email via Resend:', { to, bookingRef, from: fromEmail });
+    
+    const guestEmailResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${resendKey}`,
+      },
+      body: JSON.stringify({
+        from: fromEmail,
+        to: [to],
+        subject: `Booking Confirmation - ${bookingRef}`,
+        html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Confirmation</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #1c1917; color: white; padding: 30px; text-align: center; border-radius: 12px 12px 0 0; }
+    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 12px 12px; }
+    .booking-ref { font-size: 24px; font-weight: bold; color: #1c1917; margin: 20px 0; }
+    .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e5e5e5; }
+    .detail-label { font-weight: 600; color: #666; }
+    .detail-value { font-weight: 500; }
+    .total { font-size: 20px; font-weight: bold; color: #1c1917; margin-top: 20px; padding-top: 20px; border-top: 2px solid #1c1917; }
+    .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e5e5; font-size: 14px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Booking Confirmed!</h1>
+    <p>Thank you for choosing The Big 14</p>
+  </div>
+  
+  <div class="content">
+    <p>Hi ${guestName},</p>
+    <p>Your booking has been confirmed. Here are your booking details:</p>
+    
+    <div class="booking-ref">Reference: ${bookingRef}</div>
+    
+    <div class="detail-row">
+      <span class="detail-label">Property</span>
+      <span class="detail-value">${propertyName || 'The Big 14 Guesthouse'}</span>
+    </div>
+    
+    <div class="detail-row">
+      <span class="detail-label">Check-in</span>
+      <span class="detail-value">${formatDate(checkIn)}</span>
+    </div>
+    
+    <div class="detail-row">
+      <span class="detail-label">Check-out</span>
+      <span class="detail-value">${formatDate(checkOut)}</span>
+    </div>
+    
+    <div class="detail-row">
+      <span class="detail-label">Guests</span>
+      <span class="detail-value">${numGuests}</span>
+    </div>
+    
+    <div class="total">
+      <div class="detail-row">
+        <span class="detail-label">Total Paid</span>
+        <span class="detail-value">R${Number(total).toLocaleString()}</span>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p><strong>Check-in Instructions:</strong></p>
+      <p>• Check-in time: 2:00 PM - 8:00 PM</p>
+      <p>• Please have your ID ready for verification</p>
+      <p>• Contact us at +27 63 900 1897 for any questions</p>
+      <br>
+      <p>We look forward to hosting you!</p>
+      <p><strong>The Big 14 Team</strong></p>
+    </div>
+  </div>
+</body>
+</html>
+        `,
+      }),
+    });
+
+    if (!guestEmailResponse.ok) {
+      const errorData = await guestEmailResponse.json();
+      console.error('Resend API error (guest):', errorData);
+      return Response.json(
+        { error: errorData.message || 'Failed to send email' },
+        { status: guestEmailResponse.status }
+      );
+    }
+
+    const guestEmailData = await guestEmailResponse.json();
+
+    // Also send notification to admin email
+    try {
+      console.log('Sending admin notification to thebigfourteen03@gmail.com');
+      const adminResponse = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${resendKey}`,
+        },
+        body: JSON.stringify({
+          from: fromEmail,
+          to: ['thebigfourteen03@gmail.com'],
+          subject: `New Booking - ${bookingRef}`,
+          html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #1c1917; color: white; padding: 20px; text-align: center; }
+    .content { background: #f9f9f9; padding: 20px; }
+    .detail-row { padding: 8px 0; border-bottom: 1px solid #e5e5e5; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>New Booking Alert</h2>
+  </div>
+  <div class="content">
+    <p><strong>Reference:</strong> ${bookingRef}</p>
+    <p><strong>Guest:</strong> ${guestName}</p>
+    <p><strong>Email:</strong> ${to}</p>
+    <p><strong>Dates:</strong> ${formatDate(checkIn)} - ${formatDate(checkOut)}</p>
+    <p><strong>Guests:</strong> ${numGuests}</p>
+    <p><strong>Total:</strong> R${Number(total).toLocaleString()}</p>
+  </div>
+</body>
+</html>
+          `,
+        }),
+      });
+      const adminResult = await adminResponse.json();
+      console.log('Admin email result:', adminResult);
+      
+      if (!adminResponse.ok) {
+        console.error('Admin email failed:', adminResult);
+      }
+    } catch (adminError) {
+      console.error('Failed to send admin notification:', adminError);
+      // Don't fail if admin email fails
+    }
+
+    return Response.json({
+      success: true,
+      emailId: guestEmailData.id,
+    });
+  } catch (error: any) {
+    console.error('Email sending error:', error);
+    return Response.json(
+      { error: error.message || 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}

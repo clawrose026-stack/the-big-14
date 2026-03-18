@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,9 +7,9 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const playfair = Playfair_Display({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  variable: "--font-space",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +24,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+      <head>
+        {/* Yoco Checkout API - No SDK script needed */}
+      </head>
       <body className="font-sans antialiased bg-white text-stone-900">
         {children}
       </body>

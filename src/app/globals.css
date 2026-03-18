@@ -2,7 +2,7 @@
 
 :root {
   --font-inter: 'Inter', sans-serif;
-  --font-playfair: 'Playfair Display', serif;
+  --font-space: 'Space Grotesk', sans-serif;
 }
 
 @layer base {
@@ -13,6 +13,7 @@
   body {
     background-color: white;
     color: #1c1917;
+    font-family: var(--font-inter);
   }
 }
 
@@ -21,31 +22,43 @@
     background-color: #1c1917;
     color: white;
     padding: 1rem 2rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.025em;
+    border-radius: 12px;
     transition: all 0.3s;
   }
   
   .btn-primary:hover {
     background-color: #292524;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   }
   
   .btn-primary:active {
-    transform: scale(0.98);
+    transform: translateY(0);
   }
   
-  .btn-outline {
+  .btn-secondary {
     border: 2px solid #1c1917;
     color: #1c1917;
     padding: 1rem 2rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.025em;
+    border-radius: 12px;
     transition: all 0.3s;
   }
   
-  .btn-outline:hover {
+  .btn-secondary:hover {
     background-color: #1c1917;
     color: white;
+    transform: translateY(-2px);
+  }
+  
+  .card {
+    background-color: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   }
   
   .section-padding {
@@ -81,10 +94,37 @@
 
 @layer utilities {
   .font-display {
-    font-family: var(--font-playfair);
+    font-family: var(--font-space);
   }
   
   .font-body {
     font-family: var(--font-inter);
   }
+}
+
+/* Yoco Payment Modal - ensure it appears above all content */
+.yoco-popup-overlay,
+.yoco-popup-container,
+.yoco-popup,
+.yoco-modal,
+.yoco-modal-overlay,
+.yoco-modal-container,
+.yoco-modal-content,
+.yoco-modal-dialog,
+[data-yoco-popup],
+[data-yoco-modal],
+#yoco-popup,
+#yoco-modal,
+.yoco-overlay,
+.yoco-container,
+.yoco-wrapper,
+.yoco-frame,
+.yoco-iframe {
+  z-index: 99999 !important;
+}
+
+/* Ensure body doesn't scroll when modal is open */
+body.yoco-modal-open,
+body.has-yoco-modal {
+  overflow: hidden !important;
 }
