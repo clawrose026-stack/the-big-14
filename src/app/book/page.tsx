@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { propertyDetails } from '@/lib/property';
 import { supabase, Booking } from '@/lib/supabase';
 import { ChevronLeft, Calendar, Users, ArrowRight, Check, Loader2, Shield, CreditCard, FileText, Menu, X } from 'lucide-react';
-import { format, isSameDay, addDays, eachDayOfInterval, isBefore, startOfMonth, endOfMonth, getDay } from 'date-fns';
+import { format, isSameDay, addDays, eachDayOfInterval, isBefore, startOfMonth, endOfMonth, getDay, startOfDay } from 'date-fns';
+import { useBookings } from '@/hooks/useBookings';
 
 // Yoco Payment Button Component - Uses new Checkout API
 interface YocoPaymentButtonProps {
@@ -51,8 +52,8 @@ function YocoPaymentButton({ amount, bookingData, checkIn, checkOut, numGuests, 
             phone: bookingData.phone,
             idNumber: bookingData.idNumber,
             idType: bookingData.idType,
-            ...(checkIn && { checkIn: checkIn.toISOString() }),
-            ...(checkOut && { checkOut: checkOut.toISOString() }),
+            ...(checkIn && { checkIn: format(checkIn, 'yyyy-MM-dd') }),
+            ...(checkOut && { checkOut: format(checkOut, 'yyyy-MM-dd') }),
             numGuests: numGuests.toString(),
           },
         }),
@@ -122,10 +123,12 @@ function BookPageContent() {
   const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [bookedDates, setBookedDates] = useState<Date[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bookingRef, setBookingRef] = useState('');
+  
+  // Use centralized booking logic
+  const { bookedDates, isDateBooked, isDateDisabled, checkAvailability: verifyAvailability } = useBookings();
   
   // Calendar selection
   const [checkIn, setCheckIn] = useState<Date | null>(null);
@@ -284,32 +287,10 @@ function BookPageContent() {
       alert('Payment was cancelled. You can try again.');
     }
 
-    fetchBookedDates();
     setLoading(false);
   }, [searchParams]);
 
-  const fetchBookedDates = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('bookings')
-        .select('check_in, check_out')
-        .in('status', ['confirmed', 'checked_in']);
-
-      if (error) throw error;
-
-      const dates: Date[] = [];
-      data?.forEach((booking: { check_in: string; check_out: string }) => {
-        const start = new Date(booking.check_in);
-        const end = new Date(booking.check_out);
-        const range = eachDayOfInterval({ start, end: addDays(end, -1) });
-        dates.push(...range);
-      });
-
-      setBookedDates(dates);
-    } catch (err) {
-      console.error('Error fetching bookings:', err);
-    }
-  };
+  // Hook handles fetching booked dates
 
   // Handle payment completion - save booking and send email
   useEffect(() => {
@@ -337,8 +318,7 @@ function BookPageContent() {
   const monthEnd = endOfMonth(currentMonth);
   const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
-  const isDateBooked = (date: Date) => bookedDates.some(bookedDate => isSameDay(bookedDate, date));
-  const isDateDisabled = (date: Date) => isBefore(date, new Date()) || isDateBooked(date);
+  // Hook handles date status check
 
   const handleDateClick = (date: Date) => {
     if (isDateDisabled(date)) return;
@@ -373,11 +353,14 @@ function BookPageContent() {
   const calculateSubtotal = () => calculateNights() * propertyDetails.pricing.baseRate;
   const calculateTotal = () => calculateSubtotal() + propertyDetails.pricing.cleaningFee;
 
-  const checkAvailability = () => {
+  const checkAvailability = async () => {
     if (!checkIn || !checkOut) return;
-    const range = eachDayOfInterval({ start: checkIn, end: addDays(checkOut, -1) });
-    const hasConflict = range.some(date => isDateBooked(date));
-    if (!hasConflict) setStep(2);
+    const isAvailable = await verifyAvailability(checkIn, checkOut);
+    if (isAvailable) {
+      setStep(2);
+    } else {
+      alert('Sorry, some of the selected dates have just been booked. Please choose different dates.');
+    }
   };
 
   const handleNext = () => {
@@ -420,12 +403,18 @@ function BookPageContent() {
       const ref = bookingRef || `TBF-${Date.now().toString().slice(-8)}`;
       if (!bookingRef) setBookingRef(ref);
 
+      // Final availability check before submission
+      const isStillAvailable = await verifyAvailability(checkIn, checkOut);
+      if (!isStillAvailable) {
+        throw new Error('Some of the selected dates are no longer available. Please select different dates.');
+      }
+
       console.log('Saving booking with ref:', ref);
 
       const booking: Omit<Booking, 'id' | 'created_at'> = {
         booking_ref: ref,
-        check_in: checkIn.toISOString().split('T')[0],
-        check_out: checkOut.toISOString().split('T')[0],
+        check_in: format(checkIn, 'yyyy-MM-dd'),
+        check_out: format(checkOut, 'yyyy-MM-dd'),
         guest_first_name: bookingData.firstName,
         guest_last_name: bookingData.lastName,
         guest_email: bookingData.email,
@@ -465,8 +454,8 @@ function BookPageContent() {
             to: bookingData.email,
             bookingRef: ref,
             guestName: `${bookingData.firstName} ${bookingData.lastName}`,
-            checkIn: checkIn.toISOString(),
-            checkOut: checkOut.toISOString(),
+            checkIn: format(checkIn, 'yyyy-MM-dd'),
+            checkOut: format(checkOut, 'yyyy-MM-dd'),
             numGuests,
             total: calculateTotal(),
             propertyName: propertyDetails.name,
@@ -632,8 +621,7 @@ function BookPageContent() {
                         aspect-square flex items-center justify-center text-sm font-medium rounded-lg transition-all
                         ${selected ? 'bg-stone-900 text-white' : ''}
                         ${inRange ? 'bg-stone-200' : ''}
-                        ${booked ? 'bg-red-100 text-red-500 cursor-not-allowed' : ''}
-                        ${disabled && !booked ? 'text-stone-300 cursor-not-allowed' : 'hover:bg-stone-100'}
+                        ${disabled ? 'date-crossed-out cursor-not-allowed' : 'hover:bg-stone-100'}
                       `}
                     >
                       {format(day, 'd')}

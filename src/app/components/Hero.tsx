@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { propertyDetails } from '@/lib/property';
 import { ChevronLeft, ChevronRight, Calendar, Users, Star, ArrowRight } from 'lucide-react';
 import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isBefore, isSameDay, startOfDay, addDays, getDay } from 'date-fns';
+import { useBookings } from '@/hooks/useBookings';
 
 export default function Hero() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -13,6 +14,8 @@ export default function Hero() {
   const [checkOut, setCheckOut] = useState<Date | null>(null);
   const [numGuests, setNumGuests] = useState(2);
   const [activeImage, setActiveImage] = useState(0);
+
+  const { bookedDates, isDateBooked, isDateDisabled } = useBookings();
 
   const images = [
     { src: '/images/exterior.jpg', label: 'Exterior View' },
@@ -26,7 +29,7 @@ export default function Hero() {
   const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
   const handleDateClick = (date: Date) => {
-    if (isBefore(startOfDay(date), startOfDay(new Date()))) return;
+    if (isDateDisabled(date)) return;
 
     if (!checkIn || (checkIn && checkOut)) {
       // Start new selection
@@ -61,7 +64,9 @@ export default function Hero() {
 
   const getBookingUrl = () => {
     if (!checkIn || !checkOut) return '/book';
-    return `/book?checkIn=${checkIn.toISOString().split('T')[0]}&checkOut=${checkOut.toISOString().split('T')[0]}&guests=${numGuests}`;
+    const checkInStr = format(checkIn, 'yyyy-MM-dd');
+    const checkOutStr = format(checkOut, 'yyyy-MM-dd');
+    return `/book?checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${numGuests}`;
   };
 
   return (
@@ -178,7 +183,8 @@ export default function Hero() {
                 {days.map((day, index) => {
                   const isSelected = (checkIn && isSameDay(day, checkIn)) || (checkOut && isSameDay(day, checkOut));
                   const isInRange = checkIn && checkOut && day > checkIn && day < checkOut;
-                  const isDisabled = isBefore(startOfDay(day), startOfDay(new Date()));
+                  
+                  const isDisabled = isDateDisabled(day);
 
                   return (
                     <button
@@ -189,7 +195,7 @@ export default function Hero() {
                         aspect-square flex items-center justify-center text-sm font-medium rounded-lg transition-all
                         ${isSelected ? 'bg-stone-900 text-white' : ''}
                         ${isInRange ? 'bg-stone-200' : ''}
-                        ${isDisabled ? 'text-stone-300 cursor-not-allowed' : 'hover:bg-stone-100'}
+                        ${isDisabled ? 'date-crossed-out cursor-not-allowed opacity-50 text-stone-400' : 'hover:bg-stone-100'}
                       `}
                     >
                       {format(day, 'd')}

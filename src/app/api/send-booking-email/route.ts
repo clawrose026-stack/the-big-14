@@ -24,9 +24,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Format dates
+    // Format dates - ensuring we treat the input as a local date string to avoid timezone shifts
     const formatDate = (dateStr: string) => {
-      const date = new Date(dateStr);
+      // If the string is already YYYY-MM-DD, we want to parse it as local, not UTC
+      const [year, month, day] = dateStr.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
+      
       return date.toLocaleDateString('en-ZA', {
         weekday: 'long',
         year: 'numeric',
@@ -36,9 +39,15 @@ export async function POST(request: Request) {
     };
 
     // Send email to guest
-    const fromEmail = 'The Big 14 <clawrose026@gmail.com>';
+    // IMPORTANT: Resend requires a verified domain to send emails.
+    // If you haven't verified a domain yet, emails from @gmail.com will fail.
+    // We'll use a descriptive sender but you should ideally use a verified domain email.
+    const fromEmail = resendKey === 're_123456789' ? 'onboarding@resend.dev' : 'The Big 14 <bookings@resend.dev>';
     
-    console.log('Sending email via Resend:', { to, bookingRef, from: fromEmail });
+    // If you have a verified domain, change this to: 'The Big 14 <info@yourdomain.co.za>'
+    const finalFromEmail = process.env.RESEND_FROM_EMAIL || fromEmail;
+    
+    console.log('Sending email via Resend:', { to, bookingRef, from: finalFromEmail });
     
     const guestEmailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -47,7 +56,7 @@ export async function POST(request: Request) {
         'Authorization': `Bearer ${resendKey}`,
       },
       body: JSON.stringify({
-        from: fromEmail,
+        from: finalFromEmail,
         to: [to],
         subject: `Booking Confirmation - ${bookingRef}`,
         html: `
@@ -145,7 +154,7 @@ export async function POST(request: Request) {
           'Authorization': `Bearer ${resendKey}`,
         },
         body: JSON.stringify({
-          from: fromEmail,
+          from: finalFromEmail,
           to: ['thebigfourteen03@gmail.com'],
           subject: `New Booking - ${bookingRef}`,
           html: `

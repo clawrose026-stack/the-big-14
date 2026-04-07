@@ -4,14 +4,15 @@ import { useState, useEffect } from 'react';
 import { propertyDetails } from '@/lib/property';
 import { supabase, Booking } from '@/lib/supabase';
 import { ChevronLeft, ChevronRight, Users, Check, Loader2 } from 'lucide-react';
-import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isBefore, addDays } from 'date-fns';
+import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isBefore, addDays, startOfDay } from 'date-fns';
+import { useBookings } from '@/hooks/useBookings';
 
 export default function BookingCalendar() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [checkIn, setCheckIn] = useState<Date | null>(null);
   const [checkOut, setCheckOut] = useState<Date | null>(null);
   const [numGuests, setNumGuests] = useState(1);
-  const [bookedDates, setBookedDates] = useState<Date[]>([]);
+  const { bookedDates, isDateBooked, isDateDisabled, fetchBookedDates, checkAvailability: verifyAvailability } = useBookings();
   const [submitting, setSubmitting] = useState(false);
   const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
@@ -19,39 +20,13 @@ export default function BookingCalendar() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchBookedDates();
-  }, []);
-
-  const fetchBookedDates = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('bookings')
-        .select('check_in, check_out')
-        .in('status', ['confirmed', 'pending']);
-
-      if (error) throw error;
-
-      const dates: Date[] = [];
-      data?.forEach((booking: { check_in: string; check_out: string }) => {
-        const start = new Date(booking.check_in);
-        const end = new Date(booking.check_out);
-        const range = eachDayOfInterval({ start, end: addDays(end, -1) });
-        dates.push(...range);
-      });
-
-      setBookedDates(dates);
-    } catch (err) {
-      console.error('Error fetching bookings:', err);
-    }
-  };
+  // Hook handles fetching booked dates
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
   const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
-  const isDateBooked = (date: Date) => bookedDates.some(bookedDate => isSameDay(bookedDate, date));
-  const isDateDisabled = (date: Date) => isBefore(date, new Date()) || isDateBooked(date);
+  // Hook handles date status check
 
   const handleDateClick = (date: Date) => {
     if (isDateDisabled(date)) return;
@@ -95,6 +70,12 @@ export default function BookingCalendar() {
     setError('');
 
     try {
+      // Final availability check before submission
+      const isStillAvailable = await verifyAvailability(checkIn, checkOut);
+      if (!isStillAvailable) {
+        throw new Error('Some of selected dates are no longer available. Please select different dates.');
+      }
+
       // Split guest name into first and last
       const nameParts = guestName.trim().split(' ');
       const firstName = nameParts[0] || '';
@@ -102,8 +83,8 @@ export default function BookingCalendar() {
 
       const booking: Omit<Booking, 'id' | 'created_at'> = {
         booking_ref: `TBF-${Date.now().toString().slice(-8)}`,
-        check_in: checkIn.toISOString().split('T')[0],
-        check_out: checkOut.toISOString().split('T')[0],
+        check_in: format(checkIn, 'yyyy-MM-dd'),
+        check_out: format(checkOut, 'yyyy-MM-dd'),
         guest_first_name: firstName,
         guest_last_name: lastName,
         guest_email: guestEmail,
@@ -201,8 +182,7 @@ export default function BookingCalendar() {
                       aspect-square flex items-center justify-center text-sm font-medium transition-all
                       ${isSelected ? 'bg-stone-900 text-white' : ''}
                       ${isInRange ? 'bg-stone-200' : ''}
-                      ${isBooked ? 'bg-red-100 text-red-500 cursor-not-allowed' : ''}
-                      ${isDisabled && !isBooked ? 'text-stone-300 cursor-not-allowed' : 'hover:bg-stone-200'}
+                      ${isDisabled ? 'date-crossed-out cursor-not-allowed text-stone-300' : 'hover:bg-stone-200'}
                     `}
                   >
                     {format(day, 'd')}
@@ -214,7 +194,7 @@ export default function BookingCalendar() {
             {/* Legend */}
             <div className="flex gap-6 mt-6 text-sm">
               <div className="flex items-center gap-2"><div className="w-4 h-4 bg-stone-900" /><span>Selected</span></div>
-              <div className="flex items-center gap-2"><div className="w-4 h-4 bg-red-100" /><span>Booked</span></div>
+              <div className="flex items-center gap-2"><div className="w-4 h-4 date-crossed-out" /><span>Booked</span></div>
               <div className="flex items-center gap-2"><div className="w-4 h-4 border border-stone-300" /><span>Available</span></div>
             </div>
           </div>

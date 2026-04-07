@@ -128,3 +128,22 @@ body.yoco-modal-open,
 body.has-yoco-modal {
   overflow: hidden !important;
 }
+
+/* Datepicker cross-out for booked dates */
+.date-crossed-out {
+  position: relative !important;
+  color: #a8a29e !important; /* stone-400 */
+}
+
+.date-crossed-out::after {
+  content: "";
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 50%;
+  height: 2px;
+  background-color: #000000; /* Pure black line */
+  transform: translateY(-50%) rotate(0deg);
+  pointer-events: none;
+  z-index: 10;
+}
