@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { propertyDetails } from '@/lib/property';
 import { ChevronLeft, ChevronRight, Calendar, Users, Star, ArrowRight } from 'lucide-react';
-import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isBefore, isSameDay, startOfDay, addDays } from 'date-fns';
+import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isBefore, isSameDay, startOfDay, addDays, getDay } from 'date-fns';
 
 export default function Hero() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -170,6 +170,11 @@ export default function Hero() {
               </div>
 
               <div className="grid grid-cols-7 gap-1">
+                {/* Empty cells for days before the first of the month */}
+                {Array.from({ length: getDay(monthStart) }).map((_, index) => (
+                  <div key={`empty-${index}`} className="aspect-square" />
+                ))}
+                {/* Day cells */}
                 {days.map((day, index) => {
                   const isSelected = (checkIn && isSameDay(day, checkIn)) || (checkOut && isSameDay(day, checkOut));
                   const isInRange = checkIn && checkOut && day > checkIn && day < checkOut;

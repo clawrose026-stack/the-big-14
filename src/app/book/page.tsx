@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { propertyDetails } from '@/lib/property';
 import { supabase, Booking } from '@/lib/supabase';
 import { ChevronLeft, Calendar, Users, ArrowRight, Check, Loader2, Shield, CreditCard, FileText, Menu, X } from 'lucide-react';
-import { format, isSameDay, addDays, eachDayOfInterval, isBefore, startOfMonth, endOfMonth } from 'date-fns';
+import { format, isSameDay, addDays, eachDayOfInterval, isBefore, startOfMonth, endOfMonth, getDay } from 'date-fns';
 
 // Yoco Payment Button Component - Uses new Checkout API
 interface YocoPaymentButtonProps {
@@ -612,6 +612,11 @@ function BookPageContent() {
               </div>
 
               <div className="grid grid-cols-7 gap-1">
+                {/* Empty cells for days before the first of the month */}
+                {Array.from({ length: getDay(monthStart) }).map((_, index) => (
+                  <div key={`empty-${index}`} className="aspect-square" />
+                ))}
+                {/* Day cells */}
                 {days.map((day, index) => {
                   const selected = (checkIn && isSameDay(day, checkIn)) || (checkOut && isSameDay(day, checkOut));
                   const inRange = checkIn && checkOut && day > checkIn && day < checkOut;
