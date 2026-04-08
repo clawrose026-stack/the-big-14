@@ -45,7 +45,8 @@ export async function POST(request: Request) {
     const finalFromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
     
     // Testing logic: Resend trial accounts can only send to the account owner email.
-    // If RESEND_TEST_EMAIL is set, we use it for testing.
+    // If RESEND_TEST_EMAIL is set (e.g. in your local .env.local), we use it for testing.
+    // In production (Vercel), you should REMOVE this variable to send to real guests.
     const testEmailOverride = process.env.RESEND_TEST_EMAIL;
     const finalToEmail = testEmailOverride || to;
     
@@ -53,7 +54,7 @@ export async function POST(request: Request) {
       console.log(`[TEST MODE] Redirecting email from ${to} to authorized test email: ${testEmailOverride}`);
     }
     
-    console.log('Sending email via Resend SDK:', { to: finalToEmail, bookingRef, from: finalFromEmail });
+    console.log(`Sending email via Resend SDK: From=${finalFromEmail}, To=${finalToEmail}`);
     
     // Send email to guest
     const guestEmailResult = await resend.emails.send({
