@@ -42,25 +42,16 @@ export async function POST(request: Request) {
     };
 
     // Sender settings
-    const finalFromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+    const finalFromEmail = process.env.RESEND_FROM_EMAIL || 'bookings@big14.co.za';
+    const adminEmail = 'thebigfourteen03@gmail.com';
     
-    // Testing logic: Resend trial accounts can only send to the account owner email.
-    // If we are using the unverified 'onboarding@resend.dev' address, we MUST send to the account owner.
-    const isUnverifiedDomain = finalFromEmail === 'onboarding@resend.dev';
-    const testEmailOverride = process.env.RESEND_TEST_EMAIL || (isUnverifiedDomain ? 'clawrose026@gmail.com' : null);
-    
-    const finalToEmail = testEmailOverride || to;
-    
-    if (testEmailOverride) {
-      console.log(`[TEST MODE] Redirecting email from ${to} to authorized test email: ${testEmailOverride}`);
-    }
-    
-    console.log(`Sending email via Resend SDK: From=${finalFromEmail}, To=${finalToEmail}`);
+    console.log(`Sending email via Resend SDK: From=${finalFromEmail}, To=${to}`);
     
     // Send email to guest
     const guestEmailResult = await resend.emails.send({
       from: finalFromEmail,
-      to: [finalToEmail],
+      to: [to],
+      replyTo: adminEmail,
       subject: `Booking Confirmation - ${bookingRef}`,
       html: `
 <!DOCTYPE html>
@@ -124,7 +115,7 @@ export async function POST(request: Request) {
       <p><strong>Check-in Instructions:</strong></p>
       <p>• Check-in time: 2:00 PM - 8:00 PM</p>
       <p>• Please have your ID ready for verification</p>
-      <p>• Contact us at +27 63 900 1897 for any questions</p>
+      <p>• Contact us or WhatsApp at +27 63 900 1897 for any questions</p>
       <br>
       <p>We look forward to hosting you!</p>
       <p><strong>The Big 14 Team</strong></p>
@@ -145,11 +136,11 @@ export async function POST(request: Request) {
 
     // Also send notification to admin email
     try {
-      const adminToEmail = testEmailOverride || 'thebigfourteen03@gmail.com';
-      console.log(`Sending admin notification to ${adminToEmail}`);
+      console.log(`Sending admin notification to ${adminEmail}`);
       await resend.emails.send({
         from: finalFromEmail,
-        to: [adminToEmail],
+        to: [adminEmail],
+        replyTo: adminEmail,
         subject: `New Booking - ${bookingRef}`,
         html: `
 <!DOCTYPE html>
