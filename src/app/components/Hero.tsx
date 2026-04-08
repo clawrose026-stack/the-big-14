@@ -83,65 +83,64 @@ export default function Hero() {
           </div>
         </div>
 
-        <div>
-          {/* LEFT: Images */}
-          <div className="relative">
-            {/* Main Image */}
-            <div className="aspect-[4/3] bg-stone-200 mb-4 relative group rounded-3xl overflow-hidden">
-              <Image
-                src={images[activeImage].src}
-                alt={images[activeImage].label}
-                fill
-                className="object-cover"
-                priority={activeImage === 0}
-              />
 
-              {/* Navigation */}
-              <button
-                onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
+        <div className="relative">
+          {/* Main Image */}
+          <div className="aspect-[4/3] bg-stone-200 mb-4 relative group rounded-3xl overflow-hidden">
+            <Image
+              src={images[activeImage].src}
+              alt={images[activeImage].label}
+              fill
+              className="object-cover"
+              priority={activeImage === 0}
+            />
 
-              {/* Counter */}
-              <div className="absolute bottom-4 right-4 bg-white/90 px-4 py-2 rounded-full">
-                <span className="text-sm font-medium">{activeImage + 1} / {images.length}</span>
-              </div>
-            </div>
+            {/* Navigation */}
+            <button
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
 
-            {/* Thumbnails */}
-            <div className="grid grid-cols-4 gap-4">
-              {images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActiveImage(index)}
-                  className={`aspect-square relative rounded-2xl overflow-hidden transition-all ${activeImage === index ? 'ring-2 ring-stone-900' : 'hover:opacity-80'
-                    }`}
-                >
-                  <Image
-                    src={image.src}
-                    alt={image.label}
-                    fill
-                    className="object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-
-            {/* Tagline */}
-            <div className="mt-8 p-6 bg-stone-900 text-white rounded-3xl">
-              <p className="font-display text-2xl mb-2">{propertyDetails.tagline}</p>
-              <p className="text-white/70">Experience boutique comfort in the heart of Randburg. Perfect for couples, business travelers & solo adventurers.</p>
+            {/* Counter */}
+            <div className="absolute bottom-4 right-4 bg-white/90 px-4 py-2 rounded-full">
+              <span className="text-sm font-medium">{activeImage + 1} / {images.length}</span>
             </div>
           </div>
+
+          {/* Thumbnails */}
+          <div className="grid grid-cols-4 gap-4">
+            {images.map((image, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveImage(index)}
+                className={`aspect-square relative rounded-2xl overflow-hidden transition-all ${activeImage === index ? 'ring-2 ring-stone-900' : 'hover:opacity-80'
+                  }`}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.label}
+                  fill
+                  className="object-cover"
+                />
+              </button>
+            ))}
+          </div>
+
+          {/* Tagline */}
+          <div className="mt-8 p-6 bg-stone-900 text-white rounded-3xl">
+            <p className="font-display text-2xl mb-2">{propertyDetails.tagline}</p>
+            <p className="text-white/70">Experience boutique comfort in the heart of Randburg. Perfect for couples, business travelers & solo adventurers.</p>
+          </div>
         </div>
+
       </div>
     </section>
   );
