@@ -1,3 +1,5 @@
+import { Resend } from 'resend';
+
 // Resend Email API Route
 // Sends booking confirmation emails
 
@@ -14,7 +16,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Resend API key from environment
+    // Resend API key setup
     const resendKey = process.env.RESEND_API_KEY;
 
     if (!resendKey) {
@@ -24,9 +26,10 @@ export async function POST(request: Request) {
       );
     }
 
+    const resend = new Resend(resendKey);
+
     // Format dates - ensuring we treat the input as a local date string to avoid timezone shifts
     const formatDate = (dateStr: string) => {
-      // If the string is already YYYY-MM-DD, we want to parse it as local, not UTC
       const [year, month, day] = dateStr.split('-').map(Number);
       const date = new Date(year, month - 1, day);
       
@@ -38,28 +41,18 @@ export async function POST(request: Request) {
       });
     };
 
+    // Sender settings
+    // Default to onboarding@resend.dev which works for unverified domains
+    const finalFromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+    
+    console.log('Sending email via Resend SDK:', { to, bookingRef, from: finalFromEmail });
+    
     // Send email to guest
-    // IMPORTANT: Resend requires a verified domain to send emails.
-    // If you haven't verified a domain yet, emails from @gmail.com will fail.
-    // We'll use a descriptive sender but you should ideally use a verified domain email.
-    const fromEmail = resendKey === 're_123456789' ? 'onboarding@resend.dev' : 'The Big 14 <bookings@resend.dev>';
-    
-    // If you have a verified domain, change this to: 'The Big 14 <info@yourdomain.co.za>'
-    const finalFromEmail = process.env.RESEND_FROM_EMAIL || fromEmail;
-    
-    console.log('Sending email via Resend:', { to, bookingRef, from: finalFromEmail });
-    
-    const guestEmailResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${resendKey}`,
-      },
-      body: JSON.stringify({
-        from: finalFromEmail,
-        to: [to],
-        subject: `Booking Confirmation - ${bookingRef}`,
-        html: `
+    const guestEmailResult = await resend.emails.send({
+      from: finalFromEmail,
+      to: [to],
+      subject: `Booking Confirmation - ${bookingRef}`,
+      html: `
 <!DOCTYPE html>
 <html>
 <head>
@@ -129,35 +122,25 @@ export async function POST(request: Request) {
   </div>
 </body>
 </html>
-        `,
-      }),
+      `,
     });
 
-    if (!guestEmailResponse.ok) {
-      const errorData = await guestEmailResponse.json();
-      console.error('Resend API error (guest):', errorData);
+    if (guestEmailResult.error) {
+      console.error('Resend SDK error (guest):', guestEmailResult.error);
       return Response.json(
-        { error: errorData.message || 'Failed to send email' },
-        { status: guestEmailResponse.status }
+        { error: guestEmailResult.error.message || 'Failed to send email' },
+        { status: 400 }
       );
     }
-
-    const guestEmailData = await guestEmailResponse.json();
 
     // Also send notification to admin email
     try {
       console.log('Sending admin notification to thebigfourteen03@gmail.com');
-      const adminResponse = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${resendKey}`,
-        },
-        body: JSON.stringify({
-          from: finalFromEmail,
-          to: ['thebigfourteen03@gmail.com'],
-          subject: `New Booking - ${bookingRef}`,
-          html: `
+      await resend.emails.send({
+        from: finalFromEmail,
+        to: ['thebigfourteen03@gmail.com'],
+        subject: `New Booking - ${bookingRef}`,
+        html: `
 <!DOCTYPE html>
 <html>
 <head>
@@ -183,23 +166,15 @@ export async function POST(request: Request) {
   </div>
 </body>
 </html>
-          `,
-        }),
+        `,
       });
-      const adminResult = await adminResponse.json();
-      console.log('Admin email result:', adminResult);
-      
-      if (!adminResponse.ok) {
-        console.error('Admin email failed:', adminResult);
-      }
     } catch (adminError) {
       console.error('Failed to send admin notification:', adminError);
-      // Don't fail if admin email fails
     }
 
     return Response.json({
       success: true,
-      emailId: guestEmailData.id,
+      emailId: guestEmailResult.data?.id,
     });
   } catch (error: any) {
     console.error('Email sending error:', error);
