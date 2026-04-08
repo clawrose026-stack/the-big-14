@@ -83,199 +83,64 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* LEFT: Images */}
-          <div className="relative">
-            {/* Main Image */}
-            <div className="aspect-[4/3] bg-stone-200 mb-4 relative group rounded-3xl overflow-hidden">
-              <Image
-                src={images[activeImage].src}
-                alt={images[activeImage].label}
-                fill
-                className="object-cover"
-                priority={activeImage === 0}
-              />
-              
-              {/* Navigation */}
-              <button
-                onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
 
-              {/* Counter */}
-              <div className="absolute bottom-4 right-4 bg-white/90 px-4 py-2 rounded-full">
-                <span className="text-sm font-medium">{activeImage + 1} / {images.length}</span>
-              </div>
-            </div>
+        <div className="relative">
+          {/* Main Image */}
+          <div className="aspect-[4/3] bg-stone-200 mb-4 relative group rounded-3xl overflow-hidden">
+            <Image
+              src={images[activeImage].src}
+              alt={images[activeImage].label}
+              fill
+              className="object-cover"
+              priority={activeImage === 0}
+            />
 
-            {/* Thumbnails */}
-            <div className="grid grid-cols-4 gap-4">
-              {images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActiveImage(index)}
-                  className={`aspect-square relative rounded-2xl overflow-hidden transition-all ${
-                    activeImage === index ? 'ring-2 ring-stone-900' : 'hover:opacity-80'
-                  }`}
-                >
-                  <Image
-                    src={image.src}
-                    alt={image.label}
-                    fill
-                    className="object-cover"
-                  />
-                </button>
-              ))}
-            </div>
+            {/* Navigation */}
+            <button
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
 
-            {/* Tagline */}
-            <div className="mt-8 p-6 bg-stone-900 text-white rounded-3xl">
-              <p className="font-display text-2xl mb-2">{propertyDetails.tagline}</p>
-              <p className="text-white/70">Experience boutique comfort in the heart of Randburg. Perfect for couples, business travelers & solo adventurers.</p>
+            {/* Counter */}
+            <div className="absolute bottom-4 right-4 bg-white/90 px-4 py-2 rounded-full">
+              <span className="text-sm font-medium">{activeImage + 1} / {images.length}</span>
             </div>
           </div>
 
-          {/* RIGHT: Date Picker */}
-          <div id="date-picker" className="bg-white p-8 shadow-lg rounded-3xl">
-            <h1 className="font-display text-3xl text-stone-900 mb-2">
-              {propertyDetails.name}
-            </h1>
-            <p className="text-stone-600 mb-6">{propertyDetails.location.address}</p>
+          {/* Thumbnails */}
+          <div className="grid grid-cols-4 gap-4">
+            {images.map((image, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveImage(index)}
+                className={`aspect-square relative rounded-2xl overflow-hidden transition-all ${activeImage === index ? 'ring-2 ring-stone-900' : 'hover:opacity-80'
+                  }`}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.label}
+                  fill
+                  className="object-cover"
+                />
+              </button>
+            ))}
+          </div>
 
-            {/* Calendar */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <button
-                  onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}
-                  className="w-10 h-10 flex items-center justify-center hover:bg-stone-100 transition-colors rounded-lg"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <h3 className="font-display text-lg">{format(currentMonth, 'MMMM yyyy')}</h3>
-                <button
-                  onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-                  className="w-10 h-10 flex items-center justify-center hover:bg-stone-100 transition-colors rounded-lg"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-7 gap-1 mb-2">
-                {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-                  <div key={day} className="text-center text-xs font-medium text-stone-500 py-2">{day}</div>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-7 gap-1">
-                {/* Empty cells for days before the first of the month */}
-                {Array.from({ length: getDay(monthStart) }).map((_, index) => (
-                  <div key={`empty-${index}`} className="aspect-square" />
-                ))}
-                {/* Day cells */}
-                {days.map((day, index) => {
-                  const isSelected = (checkIn && isSameDay(day, checkIn)) || (checkOut && isSameDay(day, checkOut));
-                  const isInRange = checkIn && checkOut && day > checkIn && day < checkOut;
-                  
-                  const isDisabled = isDateDisabled(day);
-
-                  return (
-                    <button
-                      key={index}
-                      onClick={() => handleDateClick(day)}
-                      disabled={isDisabled}
-                      className={`
-                        aspect-square flex items-center justify-center text-sm font-medium rounded-lg transition-all
-                        ${isSelected ? 'bg-stone-900 text-white' : ''}
-                        ${isInRange ? 'bg-stone-200' : ''}
-                        ${isDisabled ? 'date-crossed-out cursor-not-allowed opacity-50 text-stone-400' : 'hover:bg-stone-100'}
-                      `}
-                    >
-                      {format(day, 'd')}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Selected Dates */}
-            <div className="flex gap-3 mb-4">
-              <div className="flex-1 border border-stone-300 p-3 rounded-xl">
-                <label className="block text-xs text-stone-500 uppercase mb-1">Check-in</label>
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-stone-400" />
-                  <span className="font-medium text-sm">
-                    {checkIn ? format(checkIn, 'MMM d') : 'Select'}
-                  </span>
-                </div>
-              </div>
-              <div className="flex-1 border border-stone-300 p-3 rounded-xl">
-                <label className="block text-xs text-stone-500 uppercase mb-1">Check-out</label>
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-stone-400" />
-                  <span className="font-medium text-sm">
-                    {checkOut ? format(checkOut, 'MMM d') : 'Select'}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Guests */}
-            <div className="border border-stone-300 p-3 mb-4 rounded-xl">
-              <label className="block text-xs text-stone-500 uppercase mb-2">Guests</label>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setNumGuests(Math.max(1, numGuests - 1))}
-                  className="w-8 h-8 border border-stone-300 rounded-lg flex items-center justify-center hover:bg-stone-100"
-                >
-                  -
-                </button>
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-stone-400" />
-                  <span className="font-medium">{numGuests}</span>
-                </div>
-                <button
-                  onClick={() => setNumGuests(Math.min(propertyDetails.specs.maxGuests, numGuests + 1))}
-                  className="w-8 h-8 border border-stone-300 rounded-lg flex items-center justify-center hover:bg-stone-100"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            {/* Price & CTA */}
-            {checkIn && checkOut && (
-              <div className="bg-stone-50 p-4 rounded-xl mb-4">
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-stone-600">R{propertyDetails.pricing.baseRate} x {calculateNights()} nights</span>
-                  <span>R{calculateSubtotal().toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-stone-600">Cleaning fee</span>
-                  <span>R{propertyDetails.pricing.cleaningFee}</span>
-                </div>
-                <div className="flex justify-between pt-2 border-t border-stone-200">
-                  <span className="font-semibold">Total</span>
-                  <span className="font-display text-xl">R{calculateTotal().toLocaleString()}</span>
-                </div>
-              </div>
-            )}
-
-            <Link
-              href={getBookingUrl()}
-              className={`w-full btn-primary flex items-center justify-center gap-2 ${(!checkIn || !checkOut) ? 'opacity-50 pointer-events-none' : ''}`}
-            >
-              Check Availability <ArrowRight className="w-5 h-5" />
-            </Link>
+          {/* Tagline */}
+          <div className="mt-8 p-6 bg-stone-900 text-white rounded-3xl">
+            <p className="font-display text-2xl mb-2">{propertyDetails.tagline}</p>
+            <p className="text-white/70">Experience boutique comfort in the heart of Randburg. Perfect for couples, business travelers & solo adventurers.</p>
           </div>
         </div>
+
       </div>
     </section>
   );
