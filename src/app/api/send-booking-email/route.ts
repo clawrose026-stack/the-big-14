@@ -42,15 +42,23 @@ export async function POST(request: Request) {
     };
 
     // Sender settings
-    // Default to onboarding@resend.dev which works for unverified domains
     const finalFromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
     
-    console.log('Sending email via Resend SDK:', { to, bookingRef, from: finalFromEmail });
+    // Testing logic: Resend trial accounts can only send to the account owner email.
+    // If RESEND_TEST_EMAIL is set, we use it for testing.
+    const testEmailOverride = process.env.RESEND_TEST_EMAIL;
+    const finalToEmail = testEmailOverride || to;
+    
+    if (testEmailOverride) {
+      console.log(`[TEST MODE] Redirecting email from ${to} to authorized test email: ${testEmailOverride}`);
+    }
+    
+    console.log('Sending email via Resend SDK:', { to: finalToEmail, bookingRef, from: finalFromEmail });
     
     // Send email to guest
     const guestEmailResult = await resend.emails.send({
       from: finalFromEmail,
-      to: [to],
+      to: [finalToEmail],
       subject: `Booking Confirmation - ${bookingRef}`,
       html: `
 <!DOCTYPE html>
@@ -135,10 +143,11 @@ export async function POST(request: Request) {
 
     // Also send notification to admin email
     try {
-      console.log('Sending admin notification to thebigfourteen03@gmail.com');
+      const adminToEmail = testEmailOverride || 'thebigfourteen03@gmail.com';
+      console.log(`Sending admin notification to ${adminToEmail}`);
       await resend.emails.send({
         from: finalFromEmail,
-        to: ['thebigfourteen03@gmail.com'],
+        to: [adminToEmail],
         subject: `New Booking - ${bookingRef}`,
         html: `
 <!DOCTYPE html>
