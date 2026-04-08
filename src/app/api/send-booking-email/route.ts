@@ -45,9 +45,10 @@ export async function POST(request: Request) {
     const finalFromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
     
     // Testing logic: Resend trial accounts can only send to the account owner email.
-    // If RESEND_TEST_EMAIL is set (e.g. in your local .env.local), we use it for testing.
-    // In production (Vercel), you should REMOVE this variable to send to real guests.
-    const testEmailOverride = process.env.RESEND_TEST_EMAIL;
+    // If we are using the unverified 'onboarding@resend.dev' address, we MUST send to the account owner.
+    const isUnverifiedDomain = finalFromEmail === 'onboarding@resend.dev';
+    const testEmailOverride = process.env.RESEND_TEST_EMAIL || (isUnverifiedDomain ? 'clawrose026@gmail.com' : null);
+    
     const finalToEmail = testEmailOverride || to;
     
     if (testEmailOverride) {
