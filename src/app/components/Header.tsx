@@ -12,23 +12,20 @@ export default function Header() {
       <div className="section-padding max-w-7xl mx-auto py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-stone-900 rounded-xl flex items-center justify-center">
-            <span className="text-white font-display text-lg font-bold">B14</span>
-          </div>
-          <h1 className="font-display text-2xl text-stone-900">Big 14</h1>
+          <img src="/images/big14_logo.png" alt="Logo" className="h-12" />
+
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link href="/" className="text-stone-600 hover:text-stone-900 font-medium transition-colors">Home</Link>
-          <Link href="/track" className="text-stone-600 hover:text-stone-900 font-medium transition-colors">Track Booking</Link>
           <Link href="/about" className="text-stone-600 hover:text-stone-900 font-medium transition-colors">About</Link>
           <Link href="/contact" className="text-stone-600 hover:text-stone-900 font-medium transition-colors">Contact</Link>
+          <Link href="/track" className="text-stone-600 hover:text-stone-900 font-medium transition-colors">Track Booking</Link>
           <Link href="/book" className="btn-primary text-sm py-2 px-6">Book Now</Link>
         </nav>
 
         {/* Mobile Menu Button */}
-        <button 
+        <button
           className="md:hidden p-2"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle menu"
@@ -45,36 +42,29 @@ export default function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-stone-200">
           <nav className="section-padding py-4 flex flex-col gap-4">
-            <Link 
-              href="/" 
-              className="text-stone-600 hover:text-stone-900 font-medium py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Home
-            </Link>
-            <Link 
-              href="/track" 
-              className="text-stone-600 hover:text-stone-900 font-medium py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Track Booking
-            </Link>
-            <Link 
-              href="/about" 
+            <Link
+              href="/about"
               className="text-stone-600 hover:text-stone-900 font-medium py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               About
             </Link>
-            <Link 
-              href="/contact" 
+            <Link
+              href="/track"
+              className="text-stone-600 hover:text-stone-900 font-medium py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Track Booking
+            </Link>
+            <Link
+              href="/contact"
               className="text-stone-600 hover:text-stone-900 font-medium py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
               Contact
             </Link>
-            <Link 
-              href="/book" 
+            <Link
+              href="/book"
               className="btn-primary text-center"
               onClick={() => setMobileMenuOpen(false)}
             >

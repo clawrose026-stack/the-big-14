@@ -71,22 +71,23 @@ export default function Hero() {
 
   return (
     <section className="min-h-screen bg-stone-100">
-      <div className="section-padding max-w-7xl mx-auto py-12 lg:py-20">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-12">
+      <div className="section-padding max-w-7xl mx-auto py-8">
+        {/* Header 
+        <div className="flex items-center gap-4 mb-6">
           <div className="flex items-center gap-1 bg-white px-4 py-2 shadow-sm rounded-full">
             <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
-            <span className="text-sm font-medium text-stone-900">5.0 Guest Rating</span>
+            <span className="text-sm font-medium text-stone-900">5 Airbnb Rating</span>
           </div>
           <div className="bg-white px-4 py-2 shadow-sm rounded-full">
-            <span className="text-sm font-medium text-stone-900">Superhost</span>
+            <span className="text-sm font-medium text-stone-900">Superhost on Airbnb</span>
           </div>
-        </div>
+        </div>*/
+        }
 
 
         <div className="relative">
           {/* Main Image */}
-          <div className="aspect-[4/3] bg-stone-200 mb-4 relative group rounded-3xl overflow-hidden">
+          <div className="aspect-video bg-stone-200 mb-4 relative group rounded-3xl overflow-hidden">
             <Image
               src={images[activeImage].src}
               alt={images[activeImage].label}
@@ -121,7 +122,7 @@ export default function Hero() {
               <button
                 key={index}
                 onClick={() => setActiveImage(index)}
-                className={`aspect-square relative rounded-2xl overflow-hidden transition-all ${activeImage === index ? 'ring-2 ring-stone-900' : 'hover:opacity-80'
+                className={`aspect-video relative rounded-2xl overflow-hidden transition-all ${activeImage === index ? 'ring-2 ring-stone-900' : 'hover:opacity-80'
                   }`}
               >
                 <Image

@@ -5,16 +5,16 @@ import Link from 'next/link';
 import { format, addDays, isSameDay, differenceInDays } from 'date-fns';
 import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
-import { 
-  Calendar, 
-  MapPin, 
-  CheckCircle2, 
-  Circle, 
-  Loader2, 
-  ChevronRight, 
-  Home, 
-  Coffee, 
-  Key, 
+import {
+  Calendar,
+  MapPin,
+  CheckCircle2,
+  Circle,
+  Loader2,
+  ChevronRight,
+  Home,
+  Coffee,
+  Key,
   ShieldCheck,
   Zap
 } from 'lucide-react';
@@ -35,7 +35,7 @@ interface PageProps {
 export default function BookingTimeline({ params }: PageProps) {
   const resolvedParams = use(params);
   const bookingRef = resolvedParams.ref;
-  
+
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState<any>(null);
   const [error, setError] = useState('');
@@ -190,7 +190,7 @@ export default function BookingTimeline({ params }: PageProps) {
       <main className="section-padding max-w-4xl mx-auto py-12 md:py-20">
         {/* Animated Background Element */}
         <div className="absolute top-20 right-0 -z-10 w-96 h-96 bg-stone-200/50 rounded-full blur-3xl opacity-50"></div>
-        
+
         {/* Welcome Card */}
         <div className="mb-12">
           <h1 className="font-display text-4xl md:text-5xl text-stone-900 mb-4">
@@ -225,31 +225,29 @@ export default function BookingTimeline({ params }: PageProps) {
         <div className="relative">
           {/* Vertical Line Container */}
           <div className="absolute left-[27px] top-6 bottom-6 w-[2px] overflow-hidden">
-             <div className="w-full h-full bg-stone-200"></div>
-             {/* Progress overlay */}
-             <div 
-                className="absolute top-0 left-0 w-full bg-green-500 transition-all duration-1000"
-                style={{ 
-                  height: milestones.filter(m => m.status === 'completed').length * 25 + '%' 
-                }}
-             ></div>
+            <div className="w-full h-full bg-stone-200"></div>
+            {/* Progress overlay */}
+            <div
+              className="absolute top-0 left-0 w-full bg-green-500 transition-all duration-1000"
+              style={{
+                height: milestones.filter(m => m.status === 'completed').length * 25 + '%'
+              }}
+            ></div>
           </div>
 
           <div className="space-y-12">
             {milestones.map((milestone, idx) => (
-              <div 
-                key={milestone.id} 
-                className={`relative flex gap-8 group transition-all duration-500 ${
-                  milestone.status === 'upcoming' ? 'opacity-50 grayscale' : 'opacity-100'
-                }`}
+              <div
+                key={milestone.id}
+                className={`relative flex gap-8 group transition-all duration-500 ${milestone.status === 'upcoming' ? 'opacity-50 grayscale' : 'opacity-100'
+                  }`}
               >
                 {/* Milestone Node */}
                 <div className="relative z-10">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 ${
-                    milestone.status === 'completed' 
-                      ? 'bg-green-100 shadow-green-100 shadow-md' 
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 ${milestone.status === 'completed'
+                      ? 'bg-green-100 shadow-green-100 shadow-md'
                       : (milestone.status === 'current' ? 'bg-stone-900 shadow-xl' : 'bg-white border-2 border-stone-200')
-                  }`}>
+                    }`}>
                     {milestone.status === 'completed' ? (
                       <CheckCircle2 className="w-6 h-6 text-green-600" />
                     ) : (
@@ -273,14 +271,12 @@ export default function BookingTimeline({ params }: PageProps) {
                       </span>
                     )}
                   </div>
-                  <h3 className={`font-display text-2xl mb-2 transition-colors ${
-                    milestone.status === 'upcoming' ? 'text-stone-400' : 'text-stone-900'
-                  }`}>
+                  <h3 className={`font-display text-2xl mb-2 transition-colors ${milestone.status === 'upcoming' ? 'text-stone-400' : 'text-stone-900'
+                    }`}>
                     {milestone.title}
                   </h3>
-                  <p className={`text-sm leading-relaxed max-w-md ${
-                    milestone.status === 'upcoming' ? 'text-stone-300' : 'text-stone-600'
-                  }`}>
+                  <p className={`text-sm leading-relaxed max-w-md ${milestone.status === 'upcoming' ? 'text-stone-300' : 'text-stone-600'
+                    }`}>
                     {milestone.description}
                   </p>
                 </div>
@@ -297,21 +293,21 @@ export default function BookingTimeline({ params }: PageProps) {
               Our concierge team is available 24/7 to ensure your experience at The Big 14 is exceptional.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link 
-                href="/contact" 
+              <Link
+                href="/contact"
                 className="bg-white text-stone-900 px-8 py-3 rounded-full font-bold hover:bg-stone-100 transition-colors inline-flex items-center gap-2"
               >
                 Contact Us <ChevronRight className="w-4 h-4" />
               </Link>
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="bg-white/10 text-white border border-white/20 px-8 py-3 rounded-full font-bold hover:bg-white/20 transition-colors"
               >
-                Learn More
+                Request Refund
               </Link>
             </div>
           </div>
-          
+
           {/* Abstract background graphics */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-stone-800 rounded-full -translate-y-1/2 translate-x-1/2 opacity-50"></div>
           <div className="absolute bottom-0 right-10 w-32 h-32 border border-stone-700 rounded-full translate-y-1/2 opacity-30"></div>
