@@ -15,8 +15,8 @@ export const propertyDetails = {
     propertyType: "Guesthouse"
   },
   pricing: {
-    baseRate: 850,
-    cleaningFee: 250,
+    baseRate: 730,
+    cleaningFee: 50,
     minimumNights: 1
   },
   contact: {
