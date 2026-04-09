@@ -40,9 +40,50 @@ export default function BookingTimeline({ params }: PageProps) {
   const [booking, setBooking] = useState<any>(null);
   const [error, setError] = useState('');
 
+  const [isRefunding, setIsRefunding] = useState(false);
+  const [refundStatus, setRefundStatus] = useState<null | 'success' | 'error'>(null);
+  const [canRefund, setCanRefund] = useState(false);
+
   useEffect(() => {
     fetchBooking();
   }, [bookingRef]);
+
+  useEffect(() => {
+    if (booking && booking.check_in) {
+      const [year, month, day] = booking.check_in.split('-').map(Number);
+      const checkInDateTime = new Date(year, month - 1, day, 14, 0, 0);
+      const refundDeadline = new Date(checkInDateTime.getTime() - 24 * 60 * 60 * 1000);
+      setCanRefund(new Date() < refundDeadline);
+    }
+  }, [booking]);
+
+  const handleRequestRefund = async () => {
+    if (!booking) return;
+    try {
+      setIsRefunding(true);
+      setRefundStatus(null);
+      const response = await fetch('/api/request-refund', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: booking.guest_email,
+          bookingRef: booking.booking_ref,
+          guestName: booking.guest_first_name,
+          checkIn: format(new Date(booking.check_in), 'MMM d, yyyy'),
+          checkOut: format(new Date(booking.check_out), 'MMM d, yyyy'),
+          total: booking.total_price / 100
+        })
+      });
+
+      if (!response.ok) throw new Error('Failed to request refund');
+      setRefundStatus('success');
+    } catch (err) {
+      setRefundStatus('error');
+      console.error(err);
+    } finally {
+      setIsRefunding(false);
+    }
+  };
 
   const fetchBooking = async () => {
     try {
@@ -173,10 +214,7 @@ export default function BookingTimeline({ params }: PageProps) {
       <header className="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-50">
         <div className="section-padding max-w-7xl mx-auto py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-stone-900 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-              <span className="text-white font-display text-xs font-bold">B14</span>
-            </div>
-            <span className="font-display text-xl text-stone-900">Big 14</span>
+            <img src="/images/big14_logo.png" alt="Logo" className="h-12" />
           </Link>
           <div className="flex items-center gap-4">
             <span className="hidden sm:block text-xs font-bold text-stone-400 uppercase tracking-widest font-display">Status: {booking.status.replace('_', ' ')}</span>
@@ -245,8 +283,8 @@ export default function BookingTimeline({ params }: PageProps) {
                 {/* Milestone Node */}
                 <div className="relative z-10">
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 ${milestone.status === 'completed'
-                      ? 'bg-green-100 shadow-green-100 shadow-md'
-                      : (milestone.status === 'current' ? 'bg-stone-900 shadow-xl' : 'bg-white border-2 border-stone-200')
+                    ? 'bg-green-100 shadow-green-100 shadow-md'
+                    : (milestone.status === 'current' ? 'bg-stone-900 shadow-xl' : 'bg-white border-2 border-stone-200')
                     }`}>
                     {milestone.status === 'completed' ? (
                       <CheckCircle2 className="w-6 h-6 text-green-600" />
@@ -292,20 +330,35 @@ export default function BookingTimeline({ params }: PageProps) {
             <p className="text-stone-400 mb-8 leading-relaxed">
               Our concierge team is available 24/7 to ensure your experience at The Big 14 is exceptional.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 items-center">
               <Link
                 href="/contact"
                 className="bg-white text-stone-900 px-8 py-3 rounded-full font-bold hover:bg-stone-100 transition-colors inline-flex items-center gap-2"
               >
                 Contact Us <ChevronRight className="w-4 h-4" />
               </Link>
-              <Link
-                href="/"
-                className="bg-white/10 text-white border border-white/20 px-8 py-3 rounded-full font-bold hover:bg-white/20 transition-colors"
-              >
-                Request Refund
-              </Link>
+              {canRefund && (
+                <button
+                  onClick={handleRequestRefund}
+                  disabled={isRefunding || refundStatus === 'success'}
+                  className="bg-white/10 text-white border border-white/20 px-8 py-3 rounded-full font-bold hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {isRefunding ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
+                  ) : refundStatus === 'success' ? (
+                    <><CheckCircle2 className="w-4 h-4 text-green-400" /> Request Sent</>
+                  ) : (
+                    'Request Refund'
+                  )}
+                </button>
+              )}
             </div>
+            {refundStatus === 'error' && (
+              <p className="mt-4 text-red-400 text-sm font-semibold">Failed to send request. Please try again or contact us.</p>
+            )}
+            {refundStatus === 'success' && (
+              <p className="mt-4 text-green-400 text-sm font-semibold">We've received your request and sent you an email confirmation.</p>
+            )}
           </div>
 
           {/* Abstract background graphics */}

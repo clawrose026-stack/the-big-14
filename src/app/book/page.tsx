@@ -106,10 +106,10 @@ function YocoPaymentButton({ amount, bookingData, checkIn, checkOut, numGuests, 
         ) : (
           <>
             <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="2" y="6" width="20" height="12" rx="2" fill="white" fillOpacity="0.2"/>
-              <rect x="4" y="14" width="4" height="2" rx="0.5" fill="white"/>
-              <rect x="10" y="14" width="4" height="2" rx="0.5" fill="white" fillOpacity="0.5"/>
-              <rect x="16" y="14" width="4" height="2" rx="0.5" fill="white" fillOpacity="0.3"/>
+              <rect x="2" y="6" width="20" height="12" rx="2" fill="white" fillOpacity="0.2" />
+              <rect x="4" y="14" width="4" height="2" rx="0.5" fill="white" />
+              <rect x="10" y="14" width="4" height="2" rx="0.5" fill="white" fillOpacity="0.5" />
+              <rect x="16" y="14" width="4" height="2" rx="0.5" fill="white" fillOpacity="0.3" />
             </svg>
             Pay R{amount.toLocaleString()} Securely
           </>
@@ -126,15 +126,15 @@ function BookPageContent() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [bookingRef, setBookingRef] = useState('');
-  
+
   // Use centralized booking logic
   const { bookedDates, isDateBooked, isDateDisabled, checkAvailability: verifyAvailability } = useBookings();
-  
+
   // Calendar selection
   const [checkIn, setCheckIn] = useState<Date | null>(null);
   const [checkOut, setCheckOut] = useState<Date | null>(null);
   const [numGuests, setNumGuests] = useState(2);
-  
+
   // Guest details
   const [bookingData, setBookingData] = useState({
     firstName: '',
@@ -327,12 +327,14 @@ function BookPageContent() {
       setCheckIn(date);
       setCheckOut(null);
     } else if (checkIn && !checkOut) {
-      if (date <= checkIn) {
+      if (isSameDay(date, checkIn)) {
+        setCheckOut(addDays(date, 1));
+      } else if (date < checkIn) {
         setCheckIn(date);
       } else {
         const range = eachDayOfInterval({ start: checkIn, end: date });
         const hasBookedDate = range.some(d => isDateBooked(d) && !isSameDay(d, date));
-        
+
         if (hasBookedDate) {
           setCheckIn(date);
           setCheckOut(null);
@@ -491,12 +493,9 @@ function BookPageContent() {
       <header className="bg-white shadow-sm sticky top-0">
         <div className="section-padding max-w-6xl mx-auto py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-stone-900 rounded-xl flex items-center justify-center">
-              <span className="text-white font-display text-sm font-bold">B14</span>
-            </div>
-            <span className="font-display text-xl text-stone-900">Big 14</span>
+            <img src="/images/big14_logo.png" alt="Logo" className="h-12" />
           </Link>
-          
+
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             <Link href="/" className="text-stone-600 hover:text-stone-900 font-medium">Home</Link>
@@ -505,7 +504,7 @@ function BookPageContent() {
             <div className="flex items-center gap-2">
               <span className="text-sm text-stone-500">Step {Math.min(step, 4)} of 4</span>
               <div className="w-24 h-2 bg-stone-200 rounded-full overflow-hidden">
-                <div 
+                <div
                   className="h-full bg-stone-900 transition-all duration-300"
                   style={{ width: `${(Math.min(step, 4) / 4) * 100}%` }}
                 />
@@ -514,7 +513,7 @@ function BookPageContent() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
+          <button
             className="md:hidden p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
@@ -531,22 +530,22 @@ function BookPageContent() {
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-stone-200">
             <nav className="section-padding py-4 flex flex-col gap-4">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="text-stone-600 hover:text-stone-900 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </Link>
-              <Link 
-                href="/about" 
+              <Link
+                href="/about"
                 className="text-stone-600 hover:text-stone-900 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About
               </Link>
-              <Link 
-                href="/contact" 
+              <Link
+                href="/contact"
                 className="text-stone-600 hover:text-stone-900 font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -555,7 +554,7 @@ function BookPageContent() {
               <div className="flex items-center gap-2 py-2">
                 <span className="text-sm text-stone-500">Step {Math.min(step, 4)} of 4</span>
                 <div className="w-24 h-2 bg-stone-200 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-stone-900 transition-all duration-300"
                     style={{ width: `${(Math.min(step, 4) / 4) * 100}%` }}
                   />
@@ -704,7 +703,7 @@ function BookPageContent() {
               }
               const range = eachDayOfInterval({ start: checkIn, end: addDays(checkOut, -1) });
               const hasConflict = range.some(date => isDateBooked(date));
-              
+
               if (hasConflict) {
                 return (
                   <div className="bg-red-50 p-4 rounded-xl mb-4 text-center">
@@ -713,7 +712,7 @@ function BookPageContent() {
                   </div>
                 );
               }
-              
+
               return (
                 <button onClick={checkAvailability} className="w-full btn-primary flex items-center justify-center gap-2">
                   Check Availability <ArrowRight className="w-5 h-5" />
@@ -749,14 +748,13 @@ function BookPageContent() {
                     required
                     value={bookingData.firstName}
                     onChange={(e) => {
-                      setBookingData({...bookingData, firstName: e.target.value});
-                      setTouched({...touched, firstName: true});
+                      setBookingData({ ...bookingData, firstName: e.target.value });
+                      setTouched({ ...touched, firstName: true });
                     }}
-                    className={`w-full px-4 py-3 border rounded-xl focus:outline-none transition-colors ${
-                      validationErrors.firstName && touched.firstName
+                    className={`w-full px-4 py-3 border rounded-xl focus:outline-none transition-colors ${validationErrors.firstName && touched.firstName
                         ? 'border-red-500 focus:border-red-500'
                         : 'border-stone-300 focus:border-stone-900'
-                    }`}
+                      }`}
                     placeholder="John"
                   />
                   {validationErrors.firstName && touched.firstName && (
@@ -770,14 +768,13 @@ function BookPageContent() {
                     required
                     value={bookingData.lastName}
                     onChange={(e) => {
-                      setBookingData({...bookingData, lastName: e.target.value});
-                      setTouched({...touched, lastName: true});
+                      setBookingData({ ...bookingData, lastName: e.target.value });
+                      setTouched({ ...touched, lastName: true });
                     }}
-                    className={`w-full px-4 py-3 border rounded-xl focus:outline-none transition-colors ${
-                      validationErrors.lastName && touched.lastName
+                    className={`w-full px-4 py-3 border rounded-xl focus:outline-none transition-colors ${validationErrors.lastName && touched.lastName
                         ? 'border-red-500 focus:border-red-500'
                         : 'border-stone-300 focus:border-stone-900'
-                    }`}
+                      }`}
                     placeholder="Doe"
                   />
                   {validationErrors.lastName && touched.lastName && (
@@ -793,14 +790,13 @@ function BookPageContent() {
                   required
                   value={bookingData.email}
                   onChange={(e) => {
-                    setBookingData({...bookingData, email: e.target.value});
-                    setTouched({...touched, email: true});
+                    setBookingData({ ...bookingData, email: e.target.value });
+                    setTouched({ ...touched, email: true });
                   }}
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none transition-colors ${
-                    validationErrors.email && touched.email
+                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none transition-colors ${validationErrors.email && touched.email
                       ? 'border-red-500 focus:border-red-500'
                       : 'border-stone-300 focus:border-stone-900'
-                  }`}
+                    }`}
                   placeholder="john@example.com"
                 />
                 {validationErrors.email && touched.email && (
@@ -815,14 +811,13 @@ function BookPageContent() {
                   required
                   value={bookingData.phone}
                   onChange={(e) => {
-                    setBookingData({...bookingData, phone: e.target.value});
-                    setTouched({...touched, phone: true});
+                    setBookingData({ ...bookingData, phone: e.target.value });
+                    setTouched({ ...touched, phone: true });
                   }}
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none transition-colors ${
-                    validationErrors.phone && touched.phone
+                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none transition-colors ${validationErrors.phone && touched.phone
                       ? 'border-red-500 focus:border-red-500'
                       : 'border-stone-300 focus:border-stone-900'
-                  }`}
+                    }`}
                   placeholder="082 123 4567"
                 />
                 {validationErrors.phone && touched.phone && (
@@ -841,7 +836,7 @@ function BookPageContent() {
                       value="sa_id"
                       checked={bookingData.idType === 'sa_id'}
                       onChange={(e) => {
-                        setBookingData({...bookingData, idType: e.target.value as 'sa_id', idNumber: ''});
+                        setBookingData({ ...bookingData, idType: e.target.value as 'sa_id', idNumber: '' });
                         setIdError('');
                       }}
                       className="w-4 h-4 accent-stone-900"
@@ -855,7 +850,7 @@ function BookPageContent() {
                       value="passport"
                       checked={bookingData.idType === 'passport'}
                       onChange={(e) => {
-                        setBookingData({...bookingData, idType: e.target.value as 'passport', idNumber: ''});
+                        setBookingData({ ...bookingData, idType: e.target.value as 'passport', idNumber: '' });
                         setIdError('');
                       }}
                       className="w-4 h-4 accent-stone-900"
@@ -876,18 +871,17 @@ function BookPageContent() {
                   value={bookingData.idNumber}
                   onChange={(e) => {
                     const value = e.target.value;
-                    setBookingData({...bookingData, idNumber: value});
+                    setBookingData({ ...bookingData, idNumber: value });
                     setIdError(validateIdNumber(value, bookingData.idType));
-                    setTouched({...touched, idNumber: true});
+                    setTouched({ ...touched, idNumber: true });
                   }}
                   onBlur={(e) => {
                     setIdError(validateIdNumber(e.target.value, bookingData.idType));
                   }}
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none transition-colors ${
-                    (idError || (validationErrors.idNumber && touched.idNumber))
+                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none transition-colors ${(idError || (validationErrors.idNumber && touched.idNumber))
                       ? 'border-red-500 focus:border-red-500'
                       : 'border-stone-300 focus:border-stone-900'
-                  }`}
+                    }`}
                   placeholder={bookingData.idType === 'sa_id' ? '13 digits (e.g. 9001015009087)' : 'Passport number (e.g. A12345678)'}
                   maxLength={bookingData.idType === 'sa_id' ? 13 : 9}
                 />
@@ -906,7 +900,7 @@ function BookPageContent() {
                 <label className="block text-sm font-medium text-stone-700 mb-2">Special Requests (Optional)</label>
                 <textarea
                   value={bookingData.specialRequests}
-                  onChange={(e) => setBookingData({...bookingData, specialRequests: e.target.value})}
+                  onChange={(e) => setBookingData({ ...bookingData, specialRequests: e.target.value })}
                   className="w-full px-4 py-3 border border-stone-300 rounded-xl focus:border-stone-900 focus:outline-none h-24 resize-none"
                   placeholder="Any special requirements..."
                 />
@@ -918,14 +912,13 @@ function BookPageContent() {
                   id="terms"
                   checked={bookingData.agreeToTerms}
                   onChange={(e) => {
-                    setBookingData({...bookingData, agreeToTerms: e.target.checked});
-                    setTouched({...touched, agreeToTerms: true});
+                    setBookingData({ ...bookingData, agreeToTerms: e.target.checked });
+                    setTouched({ ...touched, agreeToTerms: true });
                   }}
-                  className={`w-5 h-5 mt-0.5 rounded ${
-                    validationErrors.agreeToTerms && touched.agreeToTerms
+                  className={`w-5 h-5 mt-0.5 rounded ${validationErrors.agreeToTerms && touched.agreeToTerms
                       ? 'border-red-500'
                       : 'border-stone-300'
-                  }`}
+                    }`}
                 />
                 <div className="flex-1">
                   <label htmlFor="terms" className="text-sm text-stone-600">
@@ -1085,18 +1078,18 @@ function BookPageContent() {
             <div className="flex items-center justify-center gap-4 mt-4">
               <div className="flex items-center gap-1 text-xs text-stone-400">
                 <svg className="w-8 h-5" viewBox="0 0 48 30" fill="none">
-                  <rect width="48" height="30" rx="4" fill="#1A1F71"/>
-                  <path d="M19.5 20h3L23 10h-3l-0.5 10z" fill="white"/>
-                  <path d="M30 10.5c-1 0-1.8.4-2.3 1l-2-7.5h-3l3 11h2.5l-2-7c0.5-0.3 1-0.4 1.8-0.4 0.5 0 1 0.1 1.5 0.2l0.5-2.3z" fill="white"/>
+                  <rect width="48" height="30" rx="4" fill="#1A1F71" />
+                  <path d="M19.5 20h3L23 10h-3l-0.5 10z" fill="white" />
+                  <path d="M30 10.5c-1 0-1.8.4-2.3 1l-2-7.5h-3l3 11h2.5l-2-7c0.5-0.3 1-0.4 1.8-0.4 0.5 0 1 0.1 1.5 0.2l0.5-2.3z" fill="white" />
                 </svg>
                 <span>Visa</span>
               </div>
               <div className="flex items-center gap-1 text-xs text-stone-400">
                 <svg className="w-8 h-5" viewBox="0 0 48 30" fill="none">
-                  <rect width="48" height="30" rx="4" fill="#EB001B"/>
-                  <circle cx="19" cy="15" r="10" fill="#EB001B"/>
-                  <circle cx="29" cy="15" r="10" fill="#F79E1B"/>
-                  <path d="M24 8c3 2 5 5 5 8s-2 6-5 8c-3-2-5-5-5-8s2-6 5-8z" fill="#FF5F00"/>
+                  <rect width="48" height="30" rx="4" fill="#EB001B" />
+                  <circle cx="19" cy="15" r="10" fill="#EB001B" />
+                  <circle cx="29" cy="15" r="10" fill="#F79E1B" />
+                  <path d="M24 8c3 2 5 5 5 8s-2 6-5 8c-3-2-5-5-5-8s2-6 5-8z" fill="#FF5F00" />
                 </svg>
                 <span>Mastercard</span>
               </div>
@@ -1118,7 +1111,7 @@ function BookPageContent() {
             <p className="text-stone-600 mb-6">
               Thank you {bookingData.firstName}! Your payment was processed and your booking is confirmed.
             </p>
-            
+
             <div className="bg-stone-50 p-6 rounded-2xl mb-8 text-left">
               <p className="text-sm text-stone-500 mb-2">Booking Reference</p>
               <p className="font-display text-2xl mb-4">{bookingRef || 'TBF-' + Date.now().toString().slice(-8)}</p>
