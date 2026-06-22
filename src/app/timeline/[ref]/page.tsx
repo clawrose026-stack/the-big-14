@@ -88,18 +88,9 @@ export default function BookingTimeline({ params }: PageProps) {
   const fetchBooking = async () => {
     try {
       setLoading(true);
-      const { supabase } = await import('@/lib/supabase');
-
-      const { data, error } = await supabase
-        .from('bookings')
-        .select('*')
-        .eq('booking_ref', bookingRef)
-        .single();
-
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error('Booking not found');
-      }
+      const res = await fetch(`/api/bookings?ref=${encodeURIComponent(bookingRef)}`);
+      if (!res.ok) throw new Error('Booking not found');
+      const data = await res.json();
       setBooking(data);
     } catch (err: any) {
       console.error('Error fetching booking:', err);

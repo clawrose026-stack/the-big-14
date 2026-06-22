@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { propertyDetails } from '@/lib/property';
-import { supabase, Booking } from '@/lib/supabase';
+import { Booking } from '@/lib/db';
 import { ChevronLeft, ChevronRight, Users, Check, Loader2 } from 'lucide-react';
 import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isBefore, addDays, startOfDay } from 'date-fns';
 import { useBookings } from '@/hooks/useBookings';
@@ -100,8 +100,15 @@ export default function BookingCalendar() {
         status: 'pending',
       };
 
-      const { error: supabaseError } = await supabase.from('bookings').insert([booking]);
-      if (supabaseError) throw supabaseError;
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(booking),
+      });
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Database error');
+      }
 
       setSuccess(true);
       fetchBookedDates();

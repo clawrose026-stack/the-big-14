@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { propertyDetails } from '@/lib/property';
-import { supabase, Booking } from '@/lib/supabase';
+import { Booking } from '@/lib/db';
 import { ChevronLeft, Calendar, Users, ArrowRight, Check, Loader2, Shield, CreditCard, FileText, Menu, X } from 'lucide-react';
 import { format, isSameDay, addDays, eachDayOfInterval, isBefore, startOfMonth, endOfMonth, getDay, startOfDay } from 'date-fns';
 import { useBookings } from '@/hooks/useBookings';
@@ -438,10 +438,14 @@ function BookPageContent() {
 
       console.log('Booking data:', booking);
 
-      const { error } = await supabase.from('bookings').insert([booking]);
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(`Database error: ${error.message}`);
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(booking),
+      });
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Database error');
       }
 
       console.log('Booking saved successfully');
