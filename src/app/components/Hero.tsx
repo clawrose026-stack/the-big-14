@@ -2,20 +2,11 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { propertyDetails } from '@/lib/property';
-import { ChevronLeft, ChevronRight, Calendar, Users, Star, ArrowRight } from 'lucide-react';
-import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isBefore, isSameDay, startOfDay, addDays, getDay } from 'date-fns';
-import { useBookings } from '@/hooks/useBookings';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Hero() {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [checkIn, setCheckIn] = useState<Date | null>(null);
-  const [checkOut, setCheckOut] = useState<Date | null>(null);
-  const [numGuests, setNumGuests] = useState(2);
   const [activeImage, setActiveImage] = useState(0);
-
-  const { bookedDates, isDateBooked, isDateDisabled } = useBookings();
 
   const images = [
     { src: '/images/exterior.jpg', label: 'Exterior View' },
@@ -24,50 +15,8 @@ export default function Hero() {
     { src: '/images/bathroom.jpg', label: 'Bathroom' },
   ];
 
-  const monthStart = startOfMonth(currentMonth);
-  const monthEnd = endOfMonth(currentMonth);
-  const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
-
-  const handleDateClick = (date: Date) => {
-    if (isDateDisabled(date)) return;
-
-    if (!checkIn || (checkIn && checkOut)) {
-      // Start new selection
-      setCheckIn(date);
-      setCheckOut(null);
-    } else if (checkIn && !checkOut) {
-      if (isSameDay(date, checkIn)) {
-        // Same day clicked = 1 night stay (checkout next day)
-        setCheckOut(addDays(date, 1));
-      } else if (date < checkIn) {
-        // Earlier date = new check-in
-        setCheckIn(date);
-      } else {
-        // Later date = check-out
-        setCheckOut(date);
-      }
-    }
-  };
-
   const nextImage = () => setActiveImage((prev) => (prev + 1) % images.length);
   const prevImage = () => setActiveImage((prev) => (prev - 1 + images.length) % images.length);
-
-  const calculateNights = () => {
-    if (checkIn && checkOut) {
-      return Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
-    }
-    return 0;
-  };
-
-  const calculateSubtotal = () => calculateNights() * propertyDetails.pricing.baseRate;
-  const calculateTotal = () => calculateSubtotal() + propertyDetails.pricing.cleaningFee;
-
-  const getBookingUrl = () => {
-    if (!checkIn || !checkOut) return '/book';
-    const checkInStr = format(checkIn, 'yyyy-MM-dd');
-    const checkOutStr = format(checkOut, 'yyyy-MM-dd');
-    return `/book?checkIn=${checkInStr}&checkOut=${checkOutStr}&guests=${numGuests}`;
-  };
 
   return (
     <section className="min-h-screen bg-stone-100">

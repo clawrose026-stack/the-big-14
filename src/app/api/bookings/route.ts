@@ -44,7 +44,18 @@ export async function GET(request: NextRequest) {
 }
 
 // POST /api/bookings — create a new booking
+// TEMPORARILY DISABLED: direct bookings are not live yet. Guests book via
+// external platforms (Airbnb, Booking.com, Lekkeslaap).
+// Flip this flag to re-enable direct bookings.
+const DIRECT_BOOKINGS_ENABLED = false;
+
 export async function POST(request: NextRequest) {
+  if (!DIRECT_BOOKINGS_ENABLED) {
+    return NextResponse.json(
+      { error: "Direct bookings are temporarily unavailable. Please book through Airbnb, Booking.com or Lekkeslaap." },
+      { status: 403 }
+    );
+  }
   try {
     const body = await request.json();
     const client = await pool.connect();

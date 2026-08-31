@@ -20,8 +20,7 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-8">
           <Link href="/about" className="text-stone-600 hover:text-stone-900 font-medium transition-colors">About</Link>
           <Link href="/contact" className="text-stone-600 hover:text-stone-900 font-medium transition-colors">Contact</Link>
-          <Link href="/track" className="text-stone-600 hover:text-stone-900 font-medium transition-colors">Track Booking</Link>
-          <Link href="/book" className="btn-primary text-sm py-2 px-6">Book Now</Link>
+          <Link href="/#booking-platforms" className="btn-primary text-sm py-2 px-6">Book</Link>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -50,13 +49,6 @@ export default function Header() {
               About
             </Link>
             <Link
-              href="/track"
-              className="text-stone-600 hover:text-stone-900 font-medium py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Track Booking
-            </Link>
-            <Link
               href="/contact"
               className="text-stone-600 hover:text-stone-900 font-medium py-2"
               onClick={() => setMobileMenuOpen(false)}
@@ -64,11 +56,11 @@ export default function Header() {
               Contact
             </Link>
             <Link
-              href="/book"
+              href="/#booking-platforms"
               className="btn-primary text-center"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Book Now
+              Book
             </Link>
           </nav>
         </div>

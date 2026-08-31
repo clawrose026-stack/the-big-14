@@ -179,11 +179,11 @@ export default function AboutPage() {
         <section className="py-20 section-padding max-w-4xl mx-auto text-center">
           <h2 className="font-display text-4xl text-stone-900 mb-6">Ready to Experience Big 14?</h2>
           <p className="text-stone-600 text-lg mb-8">
-            We'd love to host you. Check availability and book your stay today.
+            We'd love to host you. Book your stay through your preferred platform today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/book" className="btn-primary">
-              Check Availability
+            <Link href="/#booking-platforms" className="btn-primary">
+              Book Your Stay
             </Link>
             <Link href="/contact" className="px-8 py-4 border-2 border-stone-900 rounded-full font-semibold hover:bg-stone-100 transition-colors">
               Contact Us
@@ -209,7 +209,7 @@ export default function AboutPage() {
               <h4 className="font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-white/60">
                 <li><Link href="/" className="hover:text-white">Home</Link></li>
-                <li><Link href="/book" className="hover:text-white">Book Now</Link></li>
+                <li><Link href="/#booking-platforms" className="hover:text-white">Book Now</Link></li>
                 <li><Link href="/about" className="hover:text-white">About Us</Link></li>
                 <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
               </ul>

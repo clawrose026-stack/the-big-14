@@ -12,7 +12,24 @@ export async function OPTIONS() {
   });
 }
 
+// TEMPORARILY DISABLED: direct bookings are not live yet. Guests book via
+// external platforms (Airbnb, Booking.com, Lekkeslaap).
+// Flip this flag to re-enable direct bookings + payments.
+const DIRECT_BOOKINGS_ENABLED = false;
+
 export async function POST(request: Request) {
+  if (!DIRECT_BOOKINGS_ENABLED) {
+    return new Response(
+      JSON.stringify({ error: 'Direct bookings are temporarily unavailable. Please book through Airbnb, Booking.com or Lekkeslaap.' }),
+      {
+        status: 403,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    );
+  }
   try {
     const body = await request.json();
     const { amount, bookingRef, customerEmail, customerName, metadata } = body;

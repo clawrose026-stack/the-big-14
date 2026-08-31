@@ -23,21 +23,34 @@ export default function BookingPlatforms() {
       ),
       description: 'View on Booking.com',
     },
+    {
+      name: 'Lekkeslaap',
+      url: 'https://www.lekkeslaap.co.za',
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
+          <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8L12 2z"/>
+        </svg>
+      ),
+      description: 'View on Lekkeslaap',
+    },
   ];
 
   return (
-    <section className="py-16 bg-stone-50">
-      <div className="section-padding max-w-4xl mx-auto">
+    <section id="booking-platforms" className="py-16 bg-stone-50 scroll-mt-20">
+      <div className="section-padding max-w-5xl mx-auto">
         <div className="text-center mb-10">
           <span className="text-stone-500 text-sm tracking-widest uppercase mb-4 block">
-            Also Available On
+            How To Book
           </span>
           <h2 className="font-display text-3xl text-stone-900">
             Book Through Your Preferred Platform
           </h2>
+          <p className="text-stone-500 mt-3">
+            Choose any of our trusted booking partners below to secure your stay.
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           {platforms.map((platform, index) => (
             <a
               key={index}
@@ -62,7 +75,7 @@ export default function BookingPlatforms() {
 
         <div className="mt-10 text-center">
           <p className="text-stone-500 text-sm">
-            Or book directly on this site to avoid platform fees
+            Online booking on this website is coming soon. For any questions, please <a href="/contact" className="underline hover:text-stone-900">contact us</a>.
           </p>
         </div>
       </div>
