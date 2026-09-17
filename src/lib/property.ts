@@ -47,3 +47,15 @@ The space features a luxurious bedroom with premium bedding, a modern bathroom w
     "Local Recommendations"
   ]
 }
+
+/** Local number "0639001897" -> "+27 63 900 1897" for display. */
+export function formatPhone(local: string) {
+  const digits = local.replace(/\D/g, '').replace(/^0/, '');
+  const groups = digits.match(/^(\d{2})(\d{3})(\d{4})$/);
+  return groups ? `+27 ${groups[1]} ${groups[2]} ${groups[3]}` : `+27 ${digits}`;
+}
+
+/** WhatsApp deep link for the property's number. */
+export function whatsappLink(local: string) {
+  return `https://wa.me/27${local.replace(/\D/g, '').replace(/^0/, '')}`;
+}

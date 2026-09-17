@@ -9,16 +9,19 @@ import FloatingButton from './components/FloatingButton';
 
 export default function Home() {
   return (
-    <main>
+    <>
       <Header />
-      
-      <Hero />
-      <Gallery />
-      <BookingPlatforms />
-      <Amenities />
-      <Contact />
+
+      <main id="main">
+        <Hero />
+        <Gallery />
+        <BookingPlatforms />
+        <Amenities />
+        <Contact />
+      </main>
+
       <Footer />
       <FloatingButton />
-    </main>
+    </>
   );
 }

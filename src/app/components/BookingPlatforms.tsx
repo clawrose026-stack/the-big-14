@@ -1,83 +1,108 @@
-import { propertyDetails } from '@/lib/property';
-import { ExternalLink } from 'lucide-react';
+import Reveal from './Reveal';
+import { ArrowUpRight, ShieldCheck } from 'lucide-react';
+
+const platforms = [
+  {
+    name: 'Airbnb',
+    url: 'https://www.airbnb.com/rooms/1591430106686520580',
+    description: 'Instant booking with Superhost protection',
+    accent: 'group-hover:bg-[#FF5A5F]',
+    icon: (
+      <svg viewBox="0 0 24 24" className="w-7 h-7" fill="currentColor" aria-hidden>
+        <path d="M12 2C9.243 2 7 4.243 7 7c0 1.107.347 2.133.938 2.973-.591.84-.938 1.866-.938 2.973 0 2.05 1.078 3.848 2.703 4.87-.03.27-.03.543 0 .814C7.078 19.152 6 20.95 6 23h2c0-1.657.895-3.118 2.234-3.91.418.2.88.31 1.366.31.486 0 .948-.11 1.366-.31C14.105 19.882 15 21.343 15 23h2c0-2.05-1.078-3.848-2.703-4.87.03-.27.03-.543 0-.814C15.922 15.794 17 13.996 17 11.946c0-1.107-.347-2.133-.938-2.973C16.653 9.133 17 8.107 17 7c0-2.757-2.243-5-5-5zm0 2c1.654 0 3 1.346 3 3s-1.346 3-3 3-3-1.346-3-3 1.346-3 3-3zm0 8c1.654 0 3 1.346 3 3s-1.346 3-3 3-3-1.346-3-3 1.346-3 3-3z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'Booking.com',
+    url: 'https://www.booking.com/hotel/za/big-14-guesthouse-randburg-johannesburg.html',
+    description: 'Free cancellation on most dates',
+    accent: 'group-hover:bg-[#003580]',
+    icon: (
+      <svg viewBox="0 0 24 24" className="w-7 h-7" fill="currentColor" aria-hidden>
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm0 2v12h16V6H4zm2 2h5v2H6V8zm0 4h5v2H6v-2zm7-4h5v2h-5V8zm0 4h5v2h-5v-2z" />
+      </svg>
+    ),
+  },
+  {
+    name: 'Lekkeslaap',
+    url: 'https://www.lekkeslaap.co.za',
+    description: "South Africa's local stay marketplace",
+    accent: 'group-hover:bg-emerald-600',
+    icon: (
+      <svg viewBox="0 0 24 24" className="w-7 h-7" fill="currentColor" aria-hidden>
+        <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8L12 2z" />
+      </svg>
+    ),
+  },
+];
 
 export default function BookingPlatforms() {
-  const platforms = [
-    {
-      name: 'Airbnb',
-      url: 'https://www.airbnb.com/rooms/1591430106686520580',
-      icon: (
-        <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
-          <path d="M12 2C9.243 2 7 4.243 7 7c0 1.107.347 2.133.938 2.973-.591.84-.938 1.866-.938 2.973 0 2.05 1.078 3.848 2.703 4.87-.03.27-.03.543 0 .814C7.078 19.152 6 20.95 6 23h2c0-1.657.895-3.118 2.234-3.91.418.2.88.31 1.366.31.486 0 .948-.11 1.366-.31C14.105 19.882 15 21.343 15 23h2c0-2.05-1.078-3.848-2.703-4.87.03-.27.03-.543 0-.814C15.922 15.794 17 13.996 17 11.946c0-1.107-.347-2.133-.938-2.973C16.653 9.133 17 8.107 17 7c0-2.757-2.243-5-5-5zm0 2c1.654 0 3 1.346 3 3s-1.346 3-3 3-3-1.346-3-3 1.346-3 3-3zm0 8c1.654 0 3 1.346 3 3s-1.346 3-3 3-3-1.346-3-3 1.346-3 3-3z"/>
-        </svg>
-      ),
-      description: 'View on Airbnb',
-    },
-    {
-      name: 'Booking.com',
-      url: 'https://www.booking.com/hotel/za/big-14-guesthouse-randburg-johannesburg.html',
-      icon: (
-        <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm0 2v12h16V6H4zm2 2h5v2H6V8zm0 4h5v2H6v-2zm7-4h5v2h-5V8zm0 4h5v2h-5v-2z"/>
-        </svg>
-      ),
-      description: 'View on Booking.com',
-    },
-    {
-      name: 'Lekkeslaap',
-      url: 'https://www.lekkeslaap.co.za',
-      icon: (
-        <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
-          <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8L12 2z"/>
-        </svg>
-      ),
-      description: 'View on Lekkeslaap',
-    },
-  ];
-
   return (
-    <section id="booking-platforms" className="py-16 bg-stone-50 scroll-mt-20">
+    <section
+      id="booking-platforms"
+      className="py-20 lg:py-28 bg-white scroll-mt-24"
+    >
       <div className="section-padding max-w-5xl mx-auto">
-        <div className="text-center mb-10">
-          <span className="text-stone-500 text-sm tracking-widest uppercase mb-4 block">
-            How To Book
-          </span>
-          <h2 className="font-display text-3xl text-stone-900">
+        <Reveal className="text-center mb-12 lg:mb-14 max-w-2xl mx-auto">
+          <span className="eyebrow mb-4">How To Book</span>
+          <h2 className="font-display text-3xl lg:text-4xl text-stone-900">
             Book Through Your Preferred Platform
           </h2>
-          <p className="text-stone-500 mt-3">
-            Choose any of our trusted booking partners below to secure your stay.
+          <p className="text-stone-500 mt-4 text-lg">
+            Same room, same rate. Choose whichever of our trusted partners you
+            already have an account with.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="space-y-3 sm:space-y-4">
           {platforms.map((platform, index) => (
-            <a
-              key={index}
-              href={platform.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all flex items-center justify-between"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-stone-100 rounded-2xl flex items-center justify-center text-stone-900 group-hover:bg-stone-900 group-hover:text-white transition-colors">
-                  {platform.icon}
+            <Reveal key={platform.name} delay={index * 90}>
+              <a
+                href={platform.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group card card-hover !p-5 sm:!p-6 flex items-center justify-between gap-4"
+              >
+                <div className="flex items-center gap-4 sm:gap-5 min-w-0">
+                  <div
+                    className={`w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-stone-100 rounded-2xl flex items-center justify-center text-stone-900 transition-colors duration-300 group-hover:text-white ${platform.accent}`}
+                  >
+                    {platform.icon}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-display text-lg sm:text-xl text-stone-900">
+                      {platform.name}
+                    </h3>
+                    <p className="text-stone-500 text-sm mt-0.5">
+                      {platform.description}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-display text-xl text-stone-900">{platform.name}</h3>
-                  <p className="text-stone-500 text-sm">{platform.description}</p>
-                </div>
-              </div>
-              <ExternalLink className="w-5 h-5 text-stone-400 group-hover:text-stone-900 transition-colors" />
-            </a>
+                <span className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-stone-400 transition-all duration-300 group-hover:bg-stone-900 group-hover:text-white">
+                  <ArrowUpRight className="w-5 h-5" />
+                </span>
+              </a>
+            </Reveal>
           ))}
         </div>
 
-        <div className="mt-10 text-center">
-          <p className="text-stone-500 text-sm">
-            Online booking on this website is coming soon. For any questions, please <a href="/contact" className="underline hover:text-stone-900">contact us</a>.
+        <Reveal
+          delay={200}
+          className="mt-10 flex items-center justify-center gap-2.5 text-sm text-stone-500"
+        >
+          <ShieldCheck className="w-4 h-4 shrink-0" />
+          <p>
+            Booked through a partner, hosted by us. Questions before you book?{' '}
+            <a
+              href="/contact"
+              className="text-stone-900 font-medium underline underline-offset-4 decoration-stone-300 hover:decoration-stone-900 transition-colors"
+            >
+              Get in touch
+            </a>
+            .
           </p>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

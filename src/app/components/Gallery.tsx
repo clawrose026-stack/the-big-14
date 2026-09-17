@@ -2,167 +2,154 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Reveal from './Reveal';
 import { propertyDetails } from '@/lib/property';
 import { ChevronLeft, ChevronRight, Bed, Bath, Users, Home } from 'lucide-react';
+
+const images = [
+  { src: '/images/exterior.jpg', label: 'Exterior View', description: 'Main entrance and facade' },
+  { src: '/images/patio.jpg', label: 'Outdoor Patio', description: 'Relaxing outdoor space' },
+  { src: '/images/patio-2.jpg', label: 'Patio Area', description: 'Private outdoor area' },
+  { src: '/images/living-room.jpg', label: 'Living Room', description: 'Spacious living space' },
+  { src: '/images/living-room-2.jpg', label: 'Living Area', description: 'Comfortable seating area' },
+  { src: '/images/kitchen.jpg', label: 'Kitchen', description: 'Fully equipped kitchen' },
+  { src: '/images/kitchen-2.jpg', label: 'Kitchen Detail', description: 'Cooking space' },
+  { src: '/images/kitchen-3.jpg', label: 'Kitchen View', description: 'Modern appliances' },
+  { src: '/images/bedroom.jpg', label: 'Master Bedroom', description: 'Master bedroom with premium linens' },
+  { src: '/images/bedroom-2.jpg', label: 'Bedroom Detail', description: 'Cozy bedroom space' },
+  { src: '/images/bathroom.jpg', label: 'Bathroom', description: 'Modern bathroom' },
+  { src: '/images/bathroom-2.jpg', label: 'Bathroom Detail', description: 'Fresh and clean' },
+];
+
+const specs = [
+  { icon: Bed, value: propertyDetails.specs.bedrooms, label: 'Bedroom' },
+  { icon: Bath, value: propertyDetails.specs.bathrooms, label: 'Bathroom' },
+  { icon: Users, value: propertyDetails.specs.maxGuests, label: 'Guests' },
+  { icon: Home, value: propertyDetails.specs.propertyType, label: 'Type' },
+];
 
 export default function Gallery() {
   const [activeImage, setActiveImage] = useState(0);
 
-  const images = [
-    { src: '/images/exterior.jpg', label: 'Exterior View', description: 'Main entrance and facade' },
-    { src: '/images/patio.jpg', label: 'Outdoor Patio', description: 'Relaxing outdoor space' },
-    { src: '/images/patio-2.jpg', label: 'Patio Area', description: 'Private outdoor area' },
-    { src: '/images/living-room.jpg', label: 'Living Room', description: 'Spacious living space' },
-    { src: '/images/living-room-2.jpg', label: 'Living Area', description: 'Comfortable seating area' },
-    { src: '/images/kitchen.jpg', label: 'Kitchen', description: 'Fully equipped kitchen' },
-    { src: '/images/kitchen-2.jpg', label: 'Kitchen Detail', description: 'Cooking space' },
-    { src: '/images/kitchen-3.jpg', label: 'Kitchen View', description: 'Modern appliances' },
-    { src: '/images/bedroom.jpg', label: 'Master Bedroom', description: 'Master bedroom with premium linens' },
-    { src: '/images/bedroom-2.jpg', label: 'Bedroom Detail', description: 'Cozy bedroom space' },
-    { src: '/images/bathroom.jpg', label: 'Bathroom', description: 'Modern bathroom' },
-    { src: '/images/bathroom-2.jpg', label: 'Bathroom Detail', description: 'Fresh and clean' },
-  ];
-
   const nextImage = () => setActiveImage((prev) => (prev + 1) % images.length);
-  const prevImage = () => setActiveImage((prev) => (prev - 1 + images.length) % images.length);
+  const prevImage = () =>
+    setActiveImage((prev) => (prev - 1 + images.length) % images.length);
 
   return (
-    <section id="about" className="py-24 bg-stone-50">
+    <section id="about" className="py-20 lg:py-28 bg-stone-50 scroll-mt-24">
       <div className="section-padding max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-16">
-          <div>
-            <span className="text-stone-500 text-sm tracking-widest uppercase mb-4 block">
-              The Space
-            </span>
+        <Reveal className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-12 lg:mb-16">
+          <div className="max-w-xl">
+            <span className="eyebrow mb-4">The Space</span>
             <h2 className="font-display text-4xl lg:text-5xl text-stone-900">
               Where Comfort Meets Style
             </h2>
           </div>
-          
-          {/* Property Specs */}
-          <div className="flex flex-wrap gap-8">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-stone-900 flex items-center justify-center rounded-xl">
-                <Bed className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-display text-stone-900">{propertyDetails.specs.bedrooms}</p>
-                <p className="text-sm text-stone-500">Bedroom</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-stone-900 flex items-center justify-center rounded-xl">
-                <Bath className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-display text-stone-900">{propertyDetails.specs.bathrooms}</p>
-                <p className="text-sm text-stone-500">Bathroom</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-stone-900 flex items-center justify-center rounded-xl">
-                <Users className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-display text-stone-900">{propertyDetails.specs.maxGuests}</p>
-                <p className="text-sm text-stone-500">Guests</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-stone-900 flex items-center justify-center rounded-xl">
-                <Home className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-display text-stone-900">{propertyDetails.specs.propertyType}</p>
-                <p className="text-sm text-stone-500">Type</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Main Gallery */}
-        <div className="grid lg:grid-cols-3 gap-4">
-          {/* Large Featured Image */}
-          <div className="lg:col-span-2 lg:row-span-2 relative aspect-[4/3] lg:aspect-auto bg-stone-200 group overflow-hidden rounded-3xl min-h-[400px]">
-            <Image
-              src={images[activeImage].src}
-              alt={images[activeImage].label}
-              fill
-              className="object-cover"
-            />
-            
-            {/* Navigation */}
+          {/* Property Specs */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4 shrink-0">
+            {specs.map(({ icon: Icon, value, label }) => (
+              <div
+                key={label}
+                className="bg-white rounded-2xl px-4 py-4 ring-1 ring-stone-900/5 flex items-center gap-3"
+              >
+                <div className="w-10 h-10 shrink-0 bg-stone-900 flex items-center justify-center rounded-xl">
+                  <Icon className="w-[1.125rem] h-[1.125rem] text-white" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-display text-lg leading-tight text-stone-900 truncate">
+                    {value}
+                  </p>
+                  <p className="text-xs text-stone-500">{label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+
+        {/* Featured image */}
+        <Reveal>
+          <div className="relative aspect-[4/3] sm:aspect-[16/9] bg-stone-200 group overflow-hidden rounded-[1.75rem] shadow-[0_30px_60px_-35px_rgba(28,25,23,0.55)]">
+            {images.map((image, index) => (
+              <Image
+                key={image.src}
+                src={image.src}
+                alt={image.label}
+                fill
+                sizes="(max-width: 1280px) 100vw, 1152px"
+                className={`object-cover transition-opacity duration-700 ${
+                  activeImage === index ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
+            ))}
+
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full shadow-lg"
+              aria-label="Previous photo"
+              className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/90 hover:bg-white flex items-center justify-center rounded-full shadow-lg transition-all md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100 hover:scale-105"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full shadow-lg"
+              aria-label="Next photo"
+              className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 w-11 h-11 bg-white/90 hover:bg-white flex items-center justify-center rounded-full shadow-lg transition-all md:opacity-0 md:group-hover:opacity-100 md:focus-visible:opacity-100 hover:scale-105"
             >
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-5 h-5" />
             </button>
 
-            {/* Image Info */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
-              <p className="text-white font-display text-xl">{images[activeImage].label}</p>
-              <p className="text-white/80 text-sm">{images[activeImage].description}</p>
-            </div>
-
-            {/* Image Counter */}
-            <div className="absolute top-4 right-4 bg-white/90 px-4 py-2 rounded-full">
-              <span className="text-sm font-medium">
+            {/* Image info */}
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent p-5 sm:p-7 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-white font-display text-lg sm:text-xl">
+                  {images[activeImage].label}
+                </p>
+                <p className="text-white/80 text-sm">
+                  {images[activeImage].description}
+                </p>
+              </div>
+              <span className="shrink-0 bg-white/90 px-3 py-1 rounded-full text-xs font-semibold tabular-nums">
                 {activeImage + 1} / {images.length}
               </span>
             </div>
           </div>
+        </Reveal>
 
-          {/* Thumbnail Grid */}
-          {images.slice(1, 4).map((image, index) => (
-            <div
-              key={index}
-              onClick={() => setActiveImage(index + 1)}
-              className="relative aspect-square bg-stone-200 cursor-pointer hover:opacity-80 transition-opacity rounded-2xl overflow-hidden"
-            >
-              <Image
-                src={image.src}
-                alt={image.label}
-                fill
-                className="object-cover"
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* All Images Grid */}
-        <div className="mt-8 grid grid-cols-5 md:grid-cols-10 gap-3">
+        {/* Thumbnail strip */}
+        <Reveal
+          delay={80}
+          className="mt-4 grid grid-cols-6 md:grid-cols-12 gap-2 sm:gap-3"
+        >
           {images.map((image, index) => (
             <button
-              key={index}
+              key={image.src}
               onClick={() => setActiveImage(index)}
-              className={`aspect-square relative rounded-xl overflow-hidden transition-all ${
-                activeImage === index ? 'ring-2 ring-stone-900' : 'hover:opacity-80'
+              aria-label={`Show ${image.label}`}
+              aria-current={activeImage === index}
+              className={`aspect-square relative rounded-xl overflow-hidden transition-all duration-300 ${
+                activeImage === index
+                  ? 'ring-2 ring-stone-900 ring-offset-2 ring-offset-stone-50'
+                  : 'opacity-55 hover:opacity-100'
               }`}
             >
               <Image
                 src={image.src}
-                alt={image.label}
+                alt=""
                 fill
+                sizes="10vw"
                 className="object-cover"
               />
             </button>
           ))}
-        </div>
+        </Reveal>
 
         {/* Description */}
-        <div className="mt-16 max-w-3xl">
+        <Reveal delay={120} className="mt-14 lg:mt-20 max-w-3xl">
           <p className="text-lg text-stone-600 leading-relaxed whitespace-pre-line">
             {propertyDetails.description}
           </p>
-        </div>
+        </Reveal>
       </div>
     </section>
   );
