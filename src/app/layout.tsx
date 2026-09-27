@@ -47,8 +47,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/images/exterior.jpg",
-        width: 1200,
-        height: 630,
+        width: 1248,
+        height: 832,
         alt: "The Big 14 guesthouse in Randburg, Johannesburg",
       },
     ],
