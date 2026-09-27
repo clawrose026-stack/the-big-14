@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { propertyDetails, formatPhone, whatsappLink } from '@/lib/property';
-import { MapPin, Phone, Mail, Clock, Send, ChevronLeft } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, ChevronLeft, Loader2, AlertCircle } from 'lucide-react';
 
 const { contact } = propertyDetails;
 
@@ -18,11 +18,40 @@ export default function ContactPage() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  // Hidden from people, filled by bots — see the honeypot check in the route.
+  const [company, setCompany] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Email sending will be set up later
-    setSubmitted(true);
+    if (sending) return;
+
+    setSending(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/contact/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, company }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setError(data.error ?? 'Something went wrong. Please try again.');
+        return;
+      }
+
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      setSubmitted(true);
+    } catch {
+      setError(
+        'We could not reach the server. Please check your connection, or WhatsApp us instead.'
+      );
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -142,7 +171,10 @@ export default function ContactPage() {
                     Thank you for reaching out. We&apos;ll get back to you soon.
                   </p>
                   <button
-                    onClick={() => setSubmitted(false)}
+                    onClick={() => {
+                      setSubmitted(false);
+                      setError(null);
+                    }}
                     className="btn-secondary"
                   >
                     Send Another Message
@@ -265,11 +297,44 @@ export default function ContactPage() {
                       />
                     </div>
 
+                    {/* Honeypot — visually hidden, never announced, never tabbable. */}
+                    <div className="hidden" aria-hidden>
+                      <label htmlFor="company">Company</label>
+                      <input
+                        id="company"
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={company}
+                        onChange={(e) => setCompany(e.target.value)}
+                      />
+                    </div>
+
+                    {error && (
+                      <p
+                        role="alert"
+                        className="flex items-start gap-2.5 text-sm text-red-700 bg-red-50 ring-1 ring-red-200 rounded-xl px-4 py-3"
+                      >
+                        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden />
+                        <span>{error}</span>
+                      </p>
+                    )}
+
                     <button
                       type="submit"
-                      className="btn-primary w-full !py-4"
+                      disabled={sending}
+                      className="btn-primary w-full !py-4 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                      <Send className="w-4 h-4" /> Send Message
+                      {sending ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" aria-hidden />
+                          Sending…
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4" aria-hidden /> Send Message
+                        </>
+                      )}
                     </button>
                   </form>
                 </>

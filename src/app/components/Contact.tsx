@@ -1,7 +1,7 @@
 'use client';
 
 import Reveal from './Reveal';
-import { propertyDetails, formatPhone, whatsappLink } from '@/lib/property';
+import { propertyDetails, livePlatforms, formatPhone, whatsappLink } from '@/lib/property';
 import {
   Phone,
   Mail,
@@ -110,30 +110,17 @@ export default function Contact() {
                 Also available on
               </p>
               <div className="flex flex-wrap gap-3">
-                <a
-                  href="https://www.airbnb.com/rooms/1591430106686520580"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white hover:text-stone-900 text-sm font-medium transition-colors"
-                >
-                  Airbnb
-                </a>
-                <a
-                  href="https://www.booking.com/hotel/za/big-14-guesthouse-randburg-johannesburg.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white hover:text-stone-900 text-sm font-medium transition-colors"
-                >
-                  Booking.com
-                </a>
-                <a
-                  href="https://www.lekkeslaap.co.za"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white hover:text-stone-900 text-sm font-medium transition-colors"
-                >
-                  Lekkeslaap
-                </a>
+                {livePlatforms.map((platform) => (
+                  <a
+                    key={platform.id}
+                    href={platform.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white hover:text-stone-900 text-sm font-medium transition-colors"
+                  >
+                    {platform.name}
+                  </a>
+                ))}
               </div>
             </div>
           </Reveal>

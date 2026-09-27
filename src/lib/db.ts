@@ -1,17 +1,51 @@
 import { Pool } from "pg";
 
-const pool = new Pool({
-  host: process.env.PG_HOST || "ec2-13-48-44-228.eu-north-1.compute.amazonaws.com",
-  port: parseInt(process.env.PG_PORT || "5432"),
-  database: process.env.PG_DATABASE || "the_big_14",
-  user: process.env.PG_USER || "brendon",
-  password: process.env.PG_PASSWORD || "justcoop18",
-  max: 10,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
-});
+/**
+ * Postgres connection pool.
+ *
+ * Every value comes from the environment — never hard-code credentials here,
+ * they end up in the git history. Set PG_* (or DATABASE_URL) in the Vercel
+ * project settings for each environment.
+ *
+ * The pool is created lazily so that a build, or a request to a route that
+ * never touches the database, does not fail just because these are unset.
+ */
+let pool: Pool | undefined;
 
-export default pool;
+function required(name: string) {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(
+      `Missing required environment variable ${name}. Set it in the Vercel project settings.`
+    );
+  }
+  return value;
+}
+
+export function getPool(): Pool {
+  if (!pool) {
+    pool = process.env.DATABASE_URL
+      ? new Pool({
+          connectionString: process.env.DATABASE_URL,
+          ssl: { rejectUnauthorized: false },
+          max: 5,
+          idleTimeoutMillis: 30000,
+          connectionTimeoutMillis: 5000,
+        })
+      : new Pool({
+          host: required("PG_HOST"),
+          port: parseInt(process.env.PG_PORT || "5432", 10),
+          database: required("PG_DATABASE"),
+          user: required("PG_USER"),
+          password: required("PG_PASSWORD"),
+          // Serverless functions each hold their own pool; keep it small.
+          max: 5,
+          idleTimeoutMillis: 30000,
+          connectionTimeoutMillis: 5000,
+        });
+  }
+  return pool;
+}
 
 export type Booking = {
   id: string;

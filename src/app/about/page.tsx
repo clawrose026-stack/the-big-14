@@ -7,7 +7,8 @@ import Reveal from '../components/Reveal';
 import { ChevronLeft, Heart, Coffee, Home, Sparkles } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'About | The Big 14 Guesthouse, Randburg',
+  alternates: { canonical: '/about/' },
+  title: 'About',
   description:
     'Meet your hosts and discover the story behind The Big 14 — a boutique guesthouse in Ferndale, Randburg.',
 };

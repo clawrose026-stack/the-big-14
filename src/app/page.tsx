@@ -6,10 +6,12 @@ import Amenities from './components/Amenities';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import FloatingButton from './components/FloatingButton';
+import StructuredData from './components/StructuredData';
 
 export default function Home() {
   return (
     <>
+      <StructuredData />
       <Header />
 
       <main id="main">

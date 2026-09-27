@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import pool from "@/lib/db";
+import { getPool } from "@/lib/db";
 
 // GET /api/bookings — get all non-blocked dates (for calendar availability)
 export async function GET(request: NextRequest) {
   try {
-    const client = await pool.connect();
+    const client = await getPool().connect();
     try {
       const { searchParams } = new URL(request.url);
       const ref = searchParams.get("ref");
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
   }
   try {
     const body = await request.json();
-    const client = await pool.connect();
+    const client = await getPool().connect();
 
     try {
       // Use client-provided ref (generated before Yoco checkout) or fall back to server-generated

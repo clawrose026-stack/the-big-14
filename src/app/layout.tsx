@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { siteUrl, isProduction } from "@/lib/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -14,23 +15,49 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "The Big 14 | Premium Guesthouse Randburg",
+  title: {
+    default: "The Big 14 | Premium Guesthouse Randburg",
+    template: "%s | The Big 14",
+  },
   description:
     "Experience boutique comfort at The Big 14. A premium guesthouse in Randburg, Johannesburg with 5-star amenities and exceptional service.",
-  keywords:
-    "guesthouse, randburg, johannesburg, accommodation, boutique hotel, airbnb alternative",
+  keywords: [
+    "guesthouse randburg",
+    "accommodation randburg",
+    "johannesburg guesthouse",
+    "boutique stay johannesburg",
+    "self check-in randburg",
+  ],
+  applicationName: "The Big 14",
+  alternates: { canonical: "/" },
+  // Preview deployments stay out of the index; production is fully crawlable.
+  robots: isProduction
+    ? { index: true, follow: true }
+    : { index: false, follow: false },
   openGraph: {
+    siteName: "The Big 14",
     title: "The Big 14 | Premium Guesthouse Randburg",
     description:
       "Boutique comfort in the heart of Randburg, Johannesburg. Book your stay at The Big 14.",
     type: "website",
     locale: "en_ZA",
+    url: "/",
+    images: [
+      {
+        url: "/images/exterior.jpg",
+        width: 1200,
+        height: 630,
+        alt: "The Big 14 guesthouse in Randburg, Johannesburg",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Big 14 | Premium Guesthouse Randburg",
+    description:
+      "Boutique comfort in the heart of Randburg, Johannesburg. Book your stay at The Big 14.",
     images: ["/images/exterior.jpg"],
   },
 };

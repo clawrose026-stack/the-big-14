@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { propertyDetails, formatPhone, whatsappLink } from '@/lib/property';
+import { propertyDetails, livePlatforms, formatPhone, whatsappLink } from '@/lib/property';
 
 const quickLinks = [
   { href: '/', label: 'Home' },
@@ -8,14 +8,6 @@ const quickLinks = [
   { href: '/contact', label: 'Contact' },
 ];
 
-const platformLinks = [
-  { href: 'https://www.airbnb.com/rooms/1591430106686520580', label: 'Airbnb' },
-  {
-    href: 'https://www.booking.com/hotel/za/big-14-guesthouse-randburg-johannesburg.html',
-    label: 'Booking.com',
-  },
-  { href: 'https://www.lekkeslaap.co.za', label: 'Lekkeslaap' },
-];
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -60,15 +52,15 @@ export default function Footer() {
               Book On
             </h4>
             <ul className="space-y-2.5 text-sm mb-6">
-              {platformLinks.map((link) => (
-                <li key={link.label}>
+              {livePlatforms.map((platform) => (
+                <li key={platform.id}>
                   <a
-                    href={link.href}
+                    href={platform.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-stone-400 hover:text-white transition-colors"
                   >
-                    {link.label}
+                    {platform.name}
                   </a>
                 </li>
               ))}
