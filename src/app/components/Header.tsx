@@ -8,6 +8,8 @@ import { Menu, X } from 'lucide-react';
 
 const navLinks = [
   { href: '/about', label: 'About' },
+  { href: '/house-rules', label: 'House Rules' },
+  { href: '/faq', label: 'FAQ' },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -68,7 +70,8 @@ export default function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-2">
           {navLinks.map((link) => {
-            const active = pathname === link.href;
+            // trailingSlash is on, so the pathname arrives as "/about/".
+            const active = pathname.replace(/\/$/, '') === link.href;
             return (
               <Link
                 key={link.href}

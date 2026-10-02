@@ -8,7 +8,9 @@ const DIRECT_BOOKING_ROUTES = ["/book", "/track", "/timeline"];
 
 const nextConfig: NextConfig = {
   images: {
-    unoptimized: true,
+    // Serve AVIF/WebP at the size each viewport needs. The photos are most of
+    // what this site is, so this is the single biggest page-weight saving.
+    formats: ["image/avif", "image/webp"],
   },
   trailingSlash: true,
 

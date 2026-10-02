@@ -4,25 +4,33 @@ import Reveal from './Reveal';
 import { propertyDetails } from '@/lib/property';
 import {
   Wifi,
+  Zap,
   Car,
   Snowflake,
   Tv,
-  Coffee,
-  Droplets,
-  Shield,
+  CookingPot,
+  Flame,
+  Trees,
+  WashingMachine,
+  Laptop,
   Moon,
+  Shield,
   Check,
 } from 'lucide-react';
 
 const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } = {
   Wifi,
+  Zap,
   Car,
   Snowflake,
   Tv,
-  Coffee,
-  Droplet: Droplets,
-  Shield,
+  CookingPot,
+  Flame,
+  Trees,
+  WashingMachine,
+  Laptop,
   Moon,
+  Shield,
 };
 
 export default function Amenities() {
@@ -50,7 +58,7 @@ export default function Amenities() {
                 <Reveal key={amenity.label} delay={index * 50}>
                   <div className="group h-full flex items-center gap-4 p-4 bg-white rounded-2xl ring-1 ring-stone-900/5 hover:ring-stone-900/15 hover:shadow-[0_16px_32px_-24px_rgba(28,25,23,0.6)] transition-all duration-300">
                     <div className="w-11 h-11 bg-stone-900 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
-                      <IconComponent className="w-5 h-5 text-white" />
+                      <IconComponent className="w-5 h-5 text-white" aria-hidden />
                     </div>
                     <span className="font-medium text-stone-900 text-[0.9375rem]">
                       {amenity.label}

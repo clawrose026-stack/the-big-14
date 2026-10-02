@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/about/' },
   title: 'About',
   description:
-    'Meet your hosts and discover the story behind The Big 14 — a boutique guesthouse in Ferndale, Randburg.',
+    'Meet your hosts and discover the story behind The Big 14 — a boutique guesthouse in Greymont, Randburg.',
 };
 
 const offerings = [
@@ -177,17 +177,18 @@ export default function AboutPage() {
                 <p>
                   The Big 14 is more than just a place to sleep — it&apos;s a
                   carefully curated space designed for relaxation and comfort.
-                  Located in the heart of Ferndale, Randburg, our guesthouse
+                  Located in quiet, residential Greymont in Randburg, our guesthouse
                   offers the perfect blend of suburban tranquillity and urban
                   convenience.
                 </p>
                 <p>
                   Whether you&apos;re here for business, visiting family, or
                   exploring Johannesburg as a tourist, you&apos;ll find
-                  everything you need: a cosy bedroom with premium linens, a
-                  modern bathroom, a fully equipped kitchen, and inviting living
-                  spaces. The outdoor patio is perfect for morning coffee or
-                  evening relaxation.
+                  everything you need: a queen bed with premium linens, a
+                  private bathroom, a kitchenette with an air fryer and stove,
+                  and a work desk. Outside there is a garden, a patio and your
+                  own braai — and a backup generator keeps the lights and WiFi
+                  on through load-shedding.
                 </p>
               </div>
             </Reveal>

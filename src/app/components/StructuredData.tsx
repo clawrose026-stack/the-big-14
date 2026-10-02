@@ -7,7 +7,7 @@ import { siteUrl } from '@/lib/site';
  * generic web page.
  */
 export default function StructuredData() {
-  const { name, description, location, contact, specs, pricing, amenities } =
+  const { name, description, location, contact, specs, pricing, amenities, stay } =
     propertyDetails;
 
   const data = {
@@ -28,12 +28,15 @@ export default function StructuredData() {
     priceRange: `ZAR ${pricing.baseRate} per night`,
     currenciesAccepted: 'ZAR',
     numberOfRooms: specs.bedrooms,
+    checkinTime: stay.checkInFrom,
+    checkoutTime: stay.checkOutBy,
     petsAllowed: false,
     smokingAllowed: false,
     address: {
       '@type': 'PostalAddress',
       addressLocality: location.neighborhood,
-      addressRegion: 'Gauteng',
+      addressRegion: location.region,
+      postalCode: location.postalCode,
       addressCountry: 'ZA',
     },
     amenityFeature: amenities.map((a) => ({

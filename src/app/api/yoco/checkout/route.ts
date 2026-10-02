@@ -154,10 +154,10 @@ export async function POST(request: Request) {
         }
       }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Checkout creation error:', error);
     return new Response(
-      JSON.stringify({ error: error.message || 'Internal server error' }),
+      JSON.stringify({ error: 'Internal server error' }),
       { 
         status: 500,
         headers: {

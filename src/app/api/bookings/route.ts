@@ -1,8 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPool } from "@/lib/db";
 
+// TEMPORARILY DISABLED: direct bookings are not live yet. Guests book via
+// external platforms (Airbnb, Booking.com, LekkeSlaap).
+// Flip this flag to re-enable direct bookings. While it is off, both GET and
+// POST refuse, so no booking data is served to anyone.
+const DIRECT_BOOKINGS_ENABLED = false;
+
+const disabled = () =>
+  NextResponse.json(
+    { error: "Direct bookings are temporarily unavailable. Please book through Airbnb, Booking.com or LekkeSlaap." },
+    { status: 403 }
+  );
+
 // GET /api/bookings — get all non-blocked dates (for calendar availability)
 export async function GET(request: NextRequest) {
+  if (!DIRECT_BOOKINGS_ENABLED) return disabled();
   try {
     const client = await getPool().connect();
     try {
@@ -37,25 +50,16 @@ export async function GET(request: NextRequest) {
     } finally {
       client.release();
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
+    // Log the detail server-side; never echo database errors to the client.
     console.error("API error:", err);
-    return NextResponse.json({ error: err.message || "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 // POST /api/bookings — create a new booking
-// TEMPORARILY DISABLED: direct bookings are not live yet. Guests book via
-// external platforms (Airbnb, Booking.com, Lekkeslaap).
-// Flip this flag to re-enable direct bookings.
-const DIRECT_BOOKINGS_ENABLED = false;
-
 export async function POST(request: NextRequest) {
-  if (!DIRECT_BOOKINGS_ENABLED) {
-    return NextResponse.json(
-      { error: "Direct bookings are temporarily unavailable. Please book through Airbnb, Booking.com or Lekkeslaap." },
-      { status: 403 }
-    );
-  }
+  if (!DIRECT_BOOKINGS_ENABLED) return disabled();
   try {
     const body = await request.json();
     const client = await getPool().connect();
@@ -100,8 +104,9 @@ export async function POST(request: NextRequest) {
     } finally {
       client.release();
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
+    // Log the detail server-side; never echo database errors to the client.
     console.error("API error:", err);
-    return NextResponse.json({ error: err.message || "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

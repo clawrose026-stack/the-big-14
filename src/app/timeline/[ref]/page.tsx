@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { format, addDays, isSameDay, differenceInDays } from 'date-fns';
 import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
+import type { Booking } from '@/lib/db';
 import {
   Calendar,
   MapPin,
@@ -37,7 +38,7 @@ export default function BookingTimeline({ params }: PageProps) {
   const bookingRef = resolvedParams.ref;
 
   const [loading, setLoading] = useState(true);
-  const [booking, setBooking] = useState<any>(null);
+  const [booking, setBooking] = useState<Booking | null>(null);
   const [error, setError] = useState('');
 
   const [isRefunding, setIsRefunding] = useState(false);
@@ -92,9 +93,9 @@ export default function BookingTimeline({ params }: PageProps) {
       if (!res.ok) throw new Error('Booking not found');
       const data = await res.json();
       setBooking(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching booking:', err);
-      setError(err.message || 'Booking not found');
+      setError(err instanceof Error ? err.message : 'Booking not found');
     } finally {
       setLoading(false);
     }
@@ -188,7 +189,7 @@ export default function BookingTimeline({ params }: PageProps) {
         </div>
         <h1 className="font-display text-3xl text-stone-900 mb-2">Booking Not Found</h1>
         <p className="text-stone-600 max-w-md mb-8">
-          We couldn't find a booking with reference <span className="font-mono font-bold text-stone-900">{bookingRef}</span>. Please double check your reference link.
+          We couldn&apos;t find a booking with reference <span className="font-mono font-bold text-stone-900">{bookingRef}</span>. Please double check your reference link.
         </p>
         <Link href="/track" className="btn-primary px-8">
           Try Another Reference
@@ -348,7 +349,7 @@ export default function BookingTimeline({ params }: PageProps) {
               <p className="mt-4 text-red-400 text-sm font-semibold">Failed to send request. Please try again or contact us.</p>
             )}
             {refundStatus === 'success' && (
-              <p className="mt-4 text-green-400 text-sm font-semibold">We've received your request and sent you an email confirmation.</p>
+              <p className="mt-4 text-green-400 text-sm font-semibold">We&apos;ve received your request and sent you an email confirmation.</p>
             )}
           </div>
 

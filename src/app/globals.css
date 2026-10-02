@@ -207,6 +207,151 @@
     }
   }
 
+  /*
+   * Typography for the house rules, FAQ and policy pages. These are long-form
+   * documents, so the rules live here rather than being repeated as utility
+   * classes on every heading and paragraph.
+   */
+  .prose-doc {
+    color: var(--ink-soft);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .prose-doc > * + * {
+    margin-top: 1.25rem;
+  }
+
+  .prose-doc h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .prose-doc h2:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .prose-doc h3 {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    color: var(--ink);
+    margin-top: 2rem;
+  }
+
+  .prose-doc ul,
+  .prose-doc ol {
+    padding-left: 1.5rem;
+  }
+
+  .prose-doc ul { list-style: disc; }
+  .prose-doc ol { list-style: decimal; }
+
+  .prose-doc li + li {
+    margin-top: 0.5rem;
+  }
+
+  .prose-doc li::marker {
+    color: #a8a29e;
+  }
+
+  .prose-doc strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .prose-doc a {
+    color: var(--ink);
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: #d6d3d1;
+    transition: text-decoration-color 0.2s;
+  }
+
+  .prose-doc a:hover {
+    text-decoration-color: var(--ink);
+  }
+
+  .prose-doc table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .prose-doc th,
+  .prose-doc td {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  .prose-doc th {
+    color: var(--ink);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* A boxed aside for the things a guest must not miss. */
+  .prose-doc .callout {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--ink);
+    border-radius: 0.875rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .prose-doc .callout > * + * {
+    margin-top: 0.75rem;
+  }
+
+  /* FAQ: give each category room to breathe. */
+  .prose-doc > section + section {
+    margin-top: 3.5rem;
+  }
+
+  /* FAQ accordion rows. */
+  .prose-doc .faq-item {
+    margin: 0;
+  }
+
+  .prose-doc .faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.125rem 0;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  .prose-doc .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .prose-doc .faq-item summary:hover {
+    color: #44403c;
+  }
+
+  .prose-doc .faq-item > p {
+    margin: 0;
+    padding: 0 2.25rem 1.375rem 0;
+  }
+
   .field {
     width: 100%;
     padding: 0.8125rem 1rem;

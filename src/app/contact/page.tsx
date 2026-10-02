@@ -1,13 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import { track } from '@vercel/analytics';
 import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { propertyDetails, formatPhone, whatsappLink } from '@/lib/property';
 import { MapPin, Phone, Mail, Clock, Send, ChevronLeft, Loader2, AlertCircle } from 'lucide-react';
 
-const { contact } = propertyDetails;
+const { contact, location, stay } = propertyDetails;
+
+// A suburb-level search, never the street address — that is sent on booking.
+const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  `${location.suburb}, ${location.neighborhood}, ${location.city}`
+)}`;
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -43,6 +49,7 @@ export default function ContactPage() {
         return;
       }
 
+      track('contact_form_sent', { subject: formData.subject });
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
       setSubmitted(true);
     } catch {
@@ -87,11 +94,12 @@ export default function ContactPage() {
                   <div>
                     <h2 className="font-semibold text-stone-900">Location</h2>
                     <p className="text-stone-600">
-                      14 The Straight Avenue
+                      {location.suburb}, {location.neighborhood}
                       <br />
-                      Ferndale, Randburg
-                      <br />
-                      Johannesburg, South Africa
+                      {location.city} {location.postalCode}, {location.country}
+                    </p>
+                    <p className="text-stone-500 text-sm mt-1">
+                      Full address sent once your booking is confirmed.
                     </p>
                   </div>
                 </div>
@@ -100,6 +108,8 @@ export default function ContactPage() {
                   href={whatsappLink(contact.whatsapp)}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-track="whatsapp_click"
+                  data-section="contact_page"
                   className="group flex items-start gap-4 p-4 -mx-4 rounded-2xl hover:bg-stone-100 transition-colors"
                 >
                   <div className="w-11 h-11 bg-stone-900 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-green-600 transition-colors">
@@ -135,25 +145,41 @@ export default function ContactPage() {
                     <h2 className="font-semibold text-stone-900">
                       Check-in / Check-out
                     </h2>
-                    <p className="text-stone-600">Check-in: 2:00 PM</p>
-                    <p className="text-stone-600">Check-out: 11:00 AM</p>
+                    <p className="text-stone-600">
+                      Check-in: {stay.checkInFrom} – {stay.checkInUntil}
+                    </p>
+                    <p className="text-stone-600">Check-out: by {stay.checkOutBy}</p>
                   </div>
                 </div>
               </div>
 
-              {/* Map placeholder — kept compact until a real map is wired up. */}
-              <div className="mt-10 bg-white border border-dashed border-stone-300 rounded-2xl px-5 py-6 flex items-center gap-4">
-                <div className="w-10 h-10 shrink-0 rounded-xl bg-stone-100 flex items-center justify-center">
-                  <MapPin className="w-5 h-5 text-stone-400" />
-                </div>
-                <div>
-                  <p className="text-stone-700 font-medium text-[0.9375rem]">
-                    14 The Straight Avenue, Ferndale
-                  </p>
-                  <p className="text-stone-400 text-sm">
-                    Interactive map coming soon
-                  </p>
-                </div>
+              {/* Getting here */}
+              <div className="mt-10 bg-white ring-1 ring-stone-900/5 rounded-2xl p-5 sm:p-6">
+                <h2 className="font-semibold text-stone-900 mb-4">Getting here</h2>
+                <ul className="space-y-2.5 text-[0.9375rem] text-stone-600">
+                  <li className="flex justify-between gap-4">
+                    <span>Lanseria International Airport</span>
+                    <span className="text-stone-900 font-medium tabular-nums shrink-0">~29 km</span>
+                  </li>
+                  <li className="flex justify-between gap-4">
+                    <span>OR Tambo International Airport</span>
+                    <span className="text-stone-900 font-medium shrink-0">40–60 min</span>
+                  </li>
+                  <li className="flex justify-between gap-4">
+                    <span>Getting around</span>
+                    <span className="text-stone-900 font-medium shrink-0">Car, Uber or Bolt</span>
+                  </li>
+                </ul>
+                <a
+                  href={mapsLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-stone-900 underline underline-offset-4 decoration-stone-300 hover:decoration-stone-900 transition-colors"
+                >
+                  <MapPin className="w-4 h-4" aria-hidden />
+                  View {location.suburb} on Google Maps
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
               </div>
             </div>
 
@@ -186,8 +212,8 @@ export default function ContactPage() {
                     Send us a Message
                   </h2>
                   <p className="text-stone-500 mb-7 text-[0.9375rem]">
-                    Fill out the form below and we&apos;ll respond within 24
-                    hours.
+                    Fill out the form below and we&apos;ll reply as soon as we
+                    can. For anything urgent, WhatsApp is quickest.
                   </p>
 
                   <form onSubmit={handleSubmit} className="space-y-5">
@@ -336,6 +362,14 @@ export default function ContactPage() {
                         </>
                       )}
                     </button>
+
+                    <p className="text-xs text-stone-500 text-center leading-relaxed">
+                      We use your details only to reply to you. See our{' '}
+                      <Link href="/privacy" className="underline underline-offset-2 hover:text-stone-900">
+                        privacy policy
+                      </Link>
+                      .
+                    </p>
                   </form>
                 </>
               )}

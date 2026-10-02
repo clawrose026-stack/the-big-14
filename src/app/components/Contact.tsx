@@ -2,21 +2,13 @@
 
 import Reveal from './Reveal';
 import { propertyDetails, livePlatforms, formatPhone, whatsappLink } from '@/lib/property';
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Instagram,
-  Facebook,
-  ArrowUpRight,
-} from 'lucide-react';
+import Link from 'next/link';
+import { Phone, Mail, MapPin, ArrowUpRight } from 'lucide-react';
+import { platformIcons } from './icons/PlatformIcons';
+import { guestDocs } from '@/lib/docs';
 
 export default function Contact() {
   const { contact, location } = propertyDetails;
-  const socials = [
-    { href: contact.instagram, icon: Instagram, label: 'Follow on Instagram' },
-    { href: contact.facebook, icon: Facebook, label: 'Like on Facebook' },
-  ].filter((s) => s.href && s.href !== '#');
 
   return (
     <section id="contact" className="on-dark py-20 lg:py-28 bg-stone-900 text-white scroll-mt-24">
@@ -38,6 +30,8 @@ export default function Contact() {
                 href={whatsappLink(contact.whatsapp)}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-track="whatsapp_click"
+                data-section="contact"
                 className="group flex items-center gap-4 p-4 -mx-4 rounded-2xl hover:bg-white/5 transition-colors"
               >
                 <div className="w-[3.25rem] h-[3.25rem] shrink-0 bg-white/10 rounded-2xl flex items-center justify-center group-hover:bg-green-500 transition-colors">
@@ -53,6 +47,8 @@ export default function Contact() {
 
               <a
                 href={`mailto:${contact.email}`}
+                data-track="email_click"
+                data-section="contact"
                 className="group flex items-center gap-4 p-4 -mx-4 rounded-2xl hover:bg-white/5 transition-colors"
               >
                 <div className="w-[3.25rem] h-[3.25rem] shrink-0 bg-white/10 rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:text-stone-900 transition-colors">
@@ -80,48 +76,55 @@ export default function Contact() {
             </div>
           </Reveal>
 
-          {/* Quick Links / Social */}
+          {/* Booking platforms and guest documents */}
           <Reveal delay={120} className="lg:pl-16 lg:border-l lg:border-white/10">
-            <h3 className="font-display text-2xl mb-8">Connect With Us</h3>
+            <h3 className="font-display text-2xl mb-8">Ready to Book?</h3>
 
-            {socials.length > 0 && (
-              <div className="space-y-3 mb-12">
-                {socials.map(({ href, icon: Icon, label }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center justify-between p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors"
-                  >
-                    <div className="flex items-center gap-4">
-                      <Icon className="w-5 h-5" />
-                      <span>{label}</span>
-                    </div>
-                    <ArrowUpRight className="w-4 h-4 text-stone-500 group-hover:text-white transition-colors" />
-                  </a>
-                ))}
-              </div>
-            )}
-
-            {/* Platform Links */}
-            <div className={socials.length > 0 ? 'border-t border-white/10 pt-8' : ''}>
-              <p className="text-xs uppercase tracking-widest text-stone-500 mb-4">
-                Also available on
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {livePlatforms.map((platform) => (
+            <div className="space-y-3 mb-12">
+              {livePlatforms.map((platform) => {
+                const mark = platformIcons[platform.id];
+                return (
                   <a
                     key={platform.id}
                     href={platform.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white hover:text-stone-900 text-sm font-medium transition-colors"
+                    data-track="platform_click"
+                    data-platform={platform.id}
+                    data-section="contact"
+                    className="group flex items-center justify-between gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white hover:text-stone-900 transition-colors"
                   >
-                    {platform.name}
+                    <span className="flex items-center gap-4 min-w-0">
+                      <span className="w-10 h-10 shrink-0 rounded-xl bg-white/10 group-hover:bg-stone-900 group-hover:text-white flex items-center justify-center transition-colors">
+                        {mark && <mark.Icon className={mark.compact} />}
+                      </span>
+                      <span className="font-medium truncate">
+                        {platform.name}
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </span>
+                    </span>
+                    <ArrowUpRight className="w-4 h-4 shrink-0 text-stone-500 group-hover:text-stone-900 transition-colors" aria-hidden />
                   </a>
+                );
+              })}
+            </div>
+
+            <div className="border-t border-white/10 pt-8">
+              <p className="text-xs uppercase tracking-widest text-stone-500 mb-4">
+                Before you book
+              </p>
+              <ul className="flex flex-wrap gap-2.5">
+                {guestDocs.map((doc) => (
+                  <li key={doc.href}>
+                    <Link
+                      href={doc.href}
+                      className="inline-flex px-4 py-2 rounded-full ring-1 ring-white/15 text-sm font-medium text-stone-300 hover:bg-white hover:text-stone-900 hover:ring-white transition-colors"
+                    >
+                      {doc.label}
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           </Reveal>
         </div>

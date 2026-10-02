@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { siteUrl, isProduction } from "@/lib/site";
+import { Analytics } from "@vercel/analytics/next";
+import ClickTracking from "./components/ClickTracking";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,7 +30,8 @@ export const metadata: Metadata = {
     "accommodation randburg",
     "johannesburg guesthouse",
     "boutique stay johannesburg",
-    "self check-in randburg",
+    "greymont accommodation",
+    "load-shedding backup accommodation johannesburg",
   ],
   applicationName: "The Big 14",
   alternates: { canonical: "/" },
@@ -81,6 +84,8 @@ export default function RootLayout({
           Skip to content
         </a>
         {children}
+        <Analytics />
+        <ClickTracking />
       </body>
     </html>
   );

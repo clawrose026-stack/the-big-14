@@ -84,9 +84,9 @@ function YocoPaymentButton({ amount, bookingData, checkIn, checkOut, numGuests, 
       } else {
         throw new Error('No redirect URL received');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Yoco checkout error:', error);
-      onError(error.message || 'Failed to initiate payment. Please try again.');
+      onError(error instanceof Error ? error.message : 'Failed to initiate payment. Please try again.');
       setLoading(false);
     }
   };
@@ -475,9 +475,9 @@ function BookPageContent() {
       }
 
       setStep(5);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Booking error:', err);
-      alert(`Error: ${err.message || 'Something went wrong. Please try again.'}`);
+      alert(`Error: ${err instanceof Error ? err.message : 'Something went wrong. Please try again.'}`);
     } finally {
       setLoading(false);
     }

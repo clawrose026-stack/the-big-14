@@ -70,7 +70,7 @@ export default function TrackPage() {
             
             <div className="mt-8 pt-6 border-t border-stone-100 text-center">
               <p className="text-sm text-stone-500">
-                Can't find your reference? Check your confirmation email or contact support.
+                Can&apos;t find your reference? Check your confirmation email or contact support.
               </p>
             </div>
           </div>

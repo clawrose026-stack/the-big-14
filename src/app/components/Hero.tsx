@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { propertyDetails } from '@/lib/property';
 import { ChevronLeft, ChevronRight, MapPin, Star } from 'lucide-react';
 
+const { ratings, stay } = propertyDetails;
+
 const images = [
   { src: '/images/exterior.jpg', label: 'Exterior View' },
   { src: '/images/living-room.jpg', label: 'Living Room' },
@@ -50,8 +52,8 @@ export default function Hero() {
           <div className="animate-rise">
             <div className="flex flex-wrap items-center gap-2 mb-6">
               <span className="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full text-xs font-semibold text-stone-900 shadow-sm ring-1 ring-stone-900/5">
-                <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                5.0 Guest Rating
+                <Star className="w-3.5 h-3.5 fill-stone-900 text-stone-900" aria-hidden />
+                {ratings.airbnb.score} · Airbnb Superhost
               </span>
               <span className="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full text-xs font-semibold text-stone-600 shadow-sm ring-1 ring-stone-900/5">
                 <MapPin className="w-3.5 h-3.5" />
@@ -109,10 +111,10 @@ export default function Hero() {
                   Check-in
                 </dt>
                 <dd className="font-display text-2xl text-stone-900">
-                  Self
+                  {stay.checkInFrom}
                   <span className="text-sm font-body text-stone-500 font-normal">
                     {' '}
-                    service
+                    onwards
                   </span>
                 </dd>
               </div>

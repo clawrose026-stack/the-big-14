@@ -3,7 +3,19 @@ import { Resend } from 'resend';
 // Resend Email API Route
 // Sends booking confirmation emails
 
+// TEMPORARILY DISABLED with the rest of the direct-booking flow. This route
+// sends email to whatever address the caller supplies, so it must never be
+// reachable unauthenticated — if direct bookings return, it should take the
+// booking reference only and look the guest's address up server-side.
+const DIRECT_BOOKINGS_ENABLED = false;
+
 export async function POST(request: Request) {
+  if (!DIRECT_BOOKINGS_ENABLED) {
+    return Response.json(
+      { error: 'Direct bookings are temporarily unavailable.' },
+      { status: 403 }
+    );
+  }
   try {
     const body = await request.json();
     const { to, bookingRef, guestName, checkIn, checkOut, numGuests, total, propertyName } = body;
@@ -178,10 +190,10 @@ export async function POST(request: Request) {
       success: true,
       emailId: guestEmailResult.data?.id,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Email sending error:', error);
     return Response.json(
-      { error: error.message || 'Internal server error' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

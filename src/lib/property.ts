@@ -3,13 +3,20 @@ export const propertyDetails = {
   tagline: "Your Premium Urban Retreat in Randburg",
   location: {
     address: "Randburg, Johannesburg, South Africa",
+    /** The suburb, as all three platforms list it. */
+    suburb: "Greymont",
     neighborhood: "Randburg",
     city: "Johannesburg",
+    region: "Gauteng",
+    postalCode: "2195",
     country: "South Africa"
+    // The street address is deliberately not published here — it is sent to
+    // guests once a booking is confirmed, as the platforms do.
   },
   specs: {
     bedrooms: 1,
     beds: 1,
+    bedType: "Queen bed",
     bathrooms: 1,
     maxGuests: 2,
     propertyType: "Guesthouse"
@@ -19,32 +26,55 @@ export const propertyDetails = {
     cleaningFee: 50,
     minimumNights: 1
   },
+  /**
+   * Stay times and rules. Matches the Airbnb, Booking.com and LekkeSlaap
+   * listings as of October 2026 — change them there and here together.
+   */
+  stay: {
+    checkInFrom: "14:00",
+    checkInUntil: "20:00",
+    checkOutBy: "10:00",
+    quietHoursFrom: "22:00",
+    quietHoursUntil: "07:00",
+    parkingSpaces: 1
+  },
   contact: {
     whatsapp: "0639001897",
-    email: "thebigfourteen03@gmail.com",
-    instagram: "#",
-    facebook: "#"
+    email: "thebigfourteen03@gmail.com"
+  },
+  /**
+   * Ratings as published by each platform. Review these when they change —
+   * the site must never claim a better score than the platform shows.
+   */
+  ratings: {
+    asOf: "2026-10-03",
+    airbnb: { score: 4.96, outOf: 5, reviews: 46, superhost: true },
+    bookingCom: { score: 9.3, outOf: 10, label: "Superb", reviews: 6 }
   },
   amenities: [
     { icon: "Wifi", label: "High-Speed WiFi" },
-    { icon: "Car", label: "Free Parking" },
+    { icon: "Zap", label: "Backup Generator" },
+    { icon: "Car", label: "Free On-Site Parking" },
     { icon: "Snowflake", label: "Air Conditioning" },
-    { icon: "Tv", label: "Smart TV" },
-    { icon: "Coffee", label: "Coffee Machine" },
-    { icon: "Droplet", label: "Hot Water" },
-    { icon: "Shield", label: "Secure Property" },
-    { icon: "Moon", label: "Quality Linens" }
+    { icon: "Tv", label: "Smart TV · DStv & Netflix" },
+    { icon: "CookingPot", label: "Equipped Kitchenette" },
+    { icon: "Flame", label: "Private Braai" },
+    { icon: "Trees", label: "Garden & Patio" },
+    { icon: "WashingMachine", label: "Washing Machine" },
+    { icon: "Laptop", label: "Work Desk" },
+    { icon: "Moon", label: "Quality Linens" },
+    { icon: "Shield", label: "Secure Property" }
   ],
-  description: `Welcome to The Big 14 — a thoughtfully designed guesthouse that combines urban convenience with boutique comfort. Located in the heart of Randburg, Johannesburg, our space offers a perfect retreat for business travelers, couples, or solo adventurers.
+  description: `Welcome to The Big 14 — a thoughtfully designed guesthouse that combines urban convenience with boutique comfort. Located in Randburg, Johannesburg, our space offers a perfect retreat for business travellers, couples, or solo adventurers.
 
-The space features a luxurious bedroom with premium bedding, a modern bathroom with all essentials, and a welcoming atmosphere that feels like home. Every detail has been curated to ensure your stay is nothing short of exceptional.`,
+The space features a queen bedroom with premium bedding, a private bathroom with all essentials, a kitchenette and a private garden with a braai. A backup generator keeps the lights on through load-shedding.`,
   highlights: [
-    "5.0★ Guest Rating",
-    "Superhost Status",
-    "Instant Booking",
-    "Self Check-in",
-    "Free Cancellation (48h)",
-    "Local Recommendations"
+    "Airbnb Superhost",
+    "4.96★ from 46 Airbnb reviews",
+    "Rated Superb 9.3 on Booking.com",
+    "Backup generator for load-shedding",
+    "Free on-site parking",
+    "Local recommendations"
   ]
 }
 
@@ -60,8 +90,6 @@ export type BookingPlatform = {
   name: string;
   url: string | null;
   description: string;
-  /** Tailwind class applied to the tile on hover. */
-  accent: string;
 };
 
 export const bookingPlatforms: BookingPlatform[] = [
@@ -69,24 +97,19 @@ export const bookingPlatforms: BookingPlatform[] = [
     id: 'airbnb',
     name: 'Airbnb',
     url: 'https://www.airbnb.com/rooms/1591430106686520580',
-    description: 'Instant booking with Superhost protection',
-    accent: 'group-hover:bg-[#FF5A5F]'
+    description: 'Superhost · 4.96★ from 46 reviews',
   },
   {
     id: 'booking-com',
     name: 'Booking.com',
     url: 'https://www.booking.com/hotel/za/big-14-guesthouse-randburg-johannesburg.html',
-    description: 'Free cancellation on most dates',
-    accent: 'group-hover:bg-[#003580]'
+    description: 'Rated Superb 9.3 · free cancellation available',
   },
   {
     id: 'lekkeslaap',
-    // TODO: replace with the direct LekkeSlaap listing URL once the listing is
-    // live — this currently lands guests on the marketplace homepage.
     name: 'LekkeSlaap',
-    url: 'https://www.lekkeslaap.co.za',
-    description: "South Africa's local stay marketplace",
-    accent: 'group-hover:bg-emerald-600'
+    url: 'https://www.lekkeslaap.co.za/akkommodasie/big-14',
+    description: "South Africa's own stay marketplace · free cancellation available",
   }
 ];
 
